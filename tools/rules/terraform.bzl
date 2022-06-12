@@ -1,21 +1,21 @@
 load("@tf_modules//tools/rules:module.bzl", "TerraformModuleInfo")
 
-def _example_binary_impl(ctx):
+def _terraform_binary_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
   runfiles = ctx.runfiles(module.srcs + module.deps.to_list() + [ctx.executable.terraform])
   
   ctx.actions.write(
     output = ctx.outputs.executable,
     is_executable = True,
-    content = "./" + ctx.executable.terraform.short_path + " $@ " + module.module_path + "\npwd"
+    content = "./" + ctx.executable.terraform.short_path + " -chdir=" + module.module_path + " $@"
   )
   
   return DefaultInfo(
     executable = ctx.outputs.executable,
     runfiles = runfiles)
 
-example_binary = rule(
-   implementation = _example_binary_impl,
+terraform_binary = rule(
+   implementation = _terraform_binary_impl,
    executable = True,
     attrs = {
         "module": attr.label(providers = [TerraformModuleInfo]),

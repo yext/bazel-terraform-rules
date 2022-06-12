@@ -23,5 +23,11 @@ terraform_module = rule(
     attrs = {
         "srcs": attr.label_list(allow_files = [".tf"]),
         "deps": attr.label_list(providers = [TerraformModuleInfo]),
+        "terraform": attr.label(
+            default = Label("@terraform_toolchain//:terraform_executable"),
+            allow_files = True,
+            executable = True,
+            cfg = "exec",
+        ),
     },
 )
