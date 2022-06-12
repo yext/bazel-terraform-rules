@@ -53,7 +53,7 @@ protobuf_deps()
 
 load("@tf_modules//tools:toolchains.bzl", "tools_register_toolchains")
 
-tools_register_toolchains()
+tools_register_toolchains(terraform_versions = ["0.12.23","0.12.24","1.2.2"])
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 

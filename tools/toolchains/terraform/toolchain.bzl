@@ -2,10 +2,12 @@ terraform_checksums = {
     "darwin_amd64": {
         "0.12.23": "ca1a0bc58b4e482d0bdcaee95d002f4901094935fd4b184f57563a5c34fd18d9",
         "0.12.24": "72482000a5e25c33e88e95d70208304acfd09bf855a7ede110da032089d13b4f",
+        "1.2.2": "",
     },
     "linux_amd64": {
         "0.12.23": "78fd53c0fffd657ee0ab5decac604b0dea2e6c0d4199a9f27db53f081d831a45",
         "0.12.24": "602d2529aafdaa0f605c06adb7c72cfb585d8aa19b3f4d8d189b42589e27bf11",
+        "1.2.2": "2934a0e8824925beb956b2edb5fef212a6141c089d29d8568150a43f95b3a626"
     },
 }
 
@@ -130,8 +132,13 @@ _terraform_register_toolchains = repository_rule(
     },
 )
 
-def register_terraform_toolchain(version = None):
-    _terraform_register_toolchains(
-        name = "terraform_toolchain",
-        version = version,
-    )
+def register_terraform_toolchain(versions = []):
+    for version in versions:
+        _terraform_register_toolchains(
+            name = "terraform_toolchain",
+            version = version,
+        )
+        _terraform_register_toolchains(
+            name = "terraform_toolchain-" + version,
+            version = version,
+        )
