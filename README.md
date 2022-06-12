@@ -1,4 +1,4 @@
-# Terraform modules - a Bazel approach
+# Bazel Rules for Terraform
 
 This repository is an extension of the excellent work done by [Dan Vulpe](https://github.com/dvulpe) in experimenting with
 creating Bazel rules for Terraform.
