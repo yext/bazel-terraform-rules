@@ -1,9 +1,10 @@
 package constants_test
 
 import (
-	"github.com/gruntwork-io/terratest/modules/terraform"
 	"testing"
 	"tfmodules/test/utils"
+
+	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
 func TestConstants(t *testing.T) {
@@ -16,7 +17,7 @@ func TestConstants(t *testing.T) {
 	}
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApply(t, terraformOptions)
-	expected := "test_value"
+	expected := `"test_value"`
 	actual := terraform.Output(t, terraformOptions, "test_constant")
 	if expected != actual {
 		t.Errorf("Expected %v, got %v", expected, actual)
