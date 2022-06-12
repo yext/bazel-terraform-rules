@@ -1,4 +1,3 @@
-load("@tf_modules//tools/rules:fmtcheck.bzl", "terraform_format_test")
 load("@tf_modules//tools/rules:lint.bzl", "terraform_lint_test")
 load("@tf_modules//tools/rules:publisher.bzl", _terraform_module_package = "terraform_module_package")
 load("@tf_modules//tools/rules:module.bzl", _terraform_module = "terraform_module")
@@ -27,10 +26,6 @@ def _terraform_local_module(name, deps, visibility, terraform_version=Label("@te
         name = "terraform",
         module = module_ref,
         terraform = terraform_version,
-    )
-    terraform_format_test(
-        name = "format",
-        module = module_ref,
     )
     terraform_lint_test(
         name = "lint",
