@@ -7,7 +7,11 @@ def _terraform_executable_impl(ctx):
   ctx.actions.write(
     output = ctx.outputs.executable,
     is_executable = True,
-    content = "./" + ctx.executable.terraform.short_path + " -chdir=" + module.module_path + " $@"
+    content = """
+BASE_DIR=$(pwd)
+cd {}
+$BASE_DIR/{} $@
+""".format(module.module_path,ctx.executable.terraform.short_path),
   )
   
   return DefaultInfo(
