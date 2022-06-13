@@ -9,8 +9,9 @@ def _terraform_executable_impl(ctx):
     is_executable = True,
     content = """
 BASE_DIR=$(pwd)
-cd {}
-$BASE_DIR/{} $@
+cd {0}
+$BASE_DIR/{1} init
+$BASE_DIR/{1} $@
 """.format(module.module_path,ctx.executable.terraform.short_path),
   )
   
