@@ -8,3 +8,4 @@ bazel-tf-modules
 .idea
 *.pem
 
+bazel-bazel-terraform-rules
