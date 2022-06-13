@@ -10,7 +10,7 @@ import (
 func TestConstants(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		TerraformBinary: utils.TerraformFinder(t),
-		TerraformDir:    "../../examples/constants",
+		TerraformDir:    "../../modules/constants",
 		EnvVars: map[string]string{
 			"HOME": "/tmp", // otherwise terraform blows up
 		},

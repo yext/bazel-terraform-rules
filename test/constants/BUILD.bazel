@@ -4,7 +4,6 @@ go_test(
     name = "constants_test",
     srcs = ["constants_test.go"],
     data = [
-        "//examples/constants",
         "//modules/constants",
         "//modules/consumer",
         "@terraform_toolchain//:terraform_executable",
