@@ -20,7 +20,7 @@ def _impl(ctx):
     # The path to each dependency will be the full path from the workspace root.
     for dep in ctx.attr.module_deps:
         for item in dep[DefaultInfo].files.to_list():
-            out = ctx.actions.declare_file(dep[TerraformModuleInfo].module_path + "/" + item.basename)
+            out = ctx.actions.declare_file(item.short_path)
             all_outputs += [out]
             ctx.actions.run_shell(
                 outputs=[out],
