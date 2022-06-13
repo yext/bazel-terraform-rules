@@ -133,11 +133,11 @@ _terraform_register_toolchains = repository_rule(
 )
 
 def register_terraform_toolchain(versions = []):
+    _terraform_register_toolchains(
+        name = "terraform_toolchain",
+        version = versions[0],
+    )
     for version in versions:
-        _terraform_register_toolchains(
-            name = "terraform_toolchain",
-            version = version,
-        )
         _terraform_register_toolchains(
             name = "terraform_toolchain-" + version,
             version = version,
