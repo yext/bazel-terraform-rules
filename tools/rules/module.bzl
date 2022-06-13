@@ -1,6 +1,6 @@
 TerraformModuleInfo = provider(
     doc = "Contains information about a Terraform module",
-    fields = ["module_name", "srcs", "module_path"],
+    fields = ["srcs", "module_path"],
 )
 
 def _impl(ctx):
@@ -17,7 +17,7 @@ def _impl(ctx):
     for dep in ctx.attr.deps:
         print(dep[TerraformModuleInfo])
         for item in dep[DefaultInfo].files.to_list():
-            out = ctx.actions.declare_file(dep[TerraformModuleInfo].module_name + "/" + item.basename)
+            out = ctx.actions.declare_file(dep[TerraformModuleInfo].module_path + "/" + item.basename)
             all_outputs += [out]
             ctx.actions.run_shell(
                 outputs=[out],
@@ -30,7 +30,6 @@ def _impl(ctx):
             files = depset(all_outputs),
         ),
         TerraformModuleInfo(
-            module_name = ctx.attr.module_name,
             srcs = ctx.files.srcs,
             module_path = ctx.files.srcs[0].dirname,
         ),
@@ -39,9 +38,6 @@ def _impl(ctx):
 terraform_module = rule(
     implementation = _impl,
     attrs = {
-        "module_name": attr.string(
-            mandatory = True,
-        ),
         "srcs": attr.label_list(allow_files = [".tf"]),
         "deps": attr.label_list(providers = [TerraformModuleInfo]),
         "terraform": attr.label(

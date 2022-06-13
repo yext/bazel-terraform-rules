@@ -2,7 +2,6 @@ load("@tf_modules//tools:def.bzl", "terraform_module")
 
 terraform_module(
     name = "consumer",
-    module_name = "consumer",
     deps = [
         "//modules/constants",
         "//modules/nested/directories",
