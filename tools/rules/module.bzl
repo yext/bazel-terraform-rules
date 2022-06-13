@@ -16,9 +16,9 @@ def _impl(ctx):
             arguments=[f.path, out.path],
             command="cp $1 $2")
 
-    # Copy all dependencies alongside the source files.
+    # Copy all module dependencies alongside the source files.
     # The path to each dependency will be the full path from the workspace root.
-    for dep in ctx.attr.deps:
+    for dep in ctx.attr.module_deps:
         for item in dep[DefaultInfo].files.to_list():
             out = ctx.actions.declare_file(dep[TerraformModuleInfo].module_path + "/" + item.basename)
             all_outputs += [out]
@@ -41,7 +41,7 @@ terraform_module = rule(
     implementation = _impl,
     attrs = {
         "srcs": attr.label_list(allow_files = [".tf"]),
-        "deps": attr.label_list(providers = [TerraformModuleInfo]),
+        "module_deps": attr.label_list(providers = [TerraformModuleInfo]),
         "terraform": attr.label(
             default = Label("@terraform_toolchain//:terraform_executable"),
             allow_files = True,
