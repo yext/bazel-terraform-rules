@@ -1,10 +1,12 @@
 TerraformModuleInfo = provider(
     doc = "Contains information about a Terraform module",
-    fields = ["srcs", "module_path"],
+    fields = ["module_path"],
 )
 
 def _impl(ctx):
     all_outputs = []
+
+    # Copy source files to the root of the target output.
     for f in ctx.files.srcs:
         out = ctx.actions.declare_file(f.basename)
         all_outputs += [out]
@@ -14,8 +16,9 @@ def _impl(ctx):
             arguments=[f.path, out.path],
             command="cp $1 $2")
 
+    # Copy all dependencies alongside the source files.
+    # The path to each dependency will be the full path from the workspace root.
     for dep in ctx.attr.deps:
-        print(dep[TerraformModuleInfo])
         for item in dep[DefaultInfo].files.to_list():
             out = ctx.actions.declare_file(dep[TerraformModuleInfo].module_path + "/" + item.basename)
             all_outputs += [out]
@@ -30,7 +33,6 @@ def _impl(ctx):
             files = depset(all_outputs),
         ),
         TerraformModuleInfo(
-            srcs = ctx.files.srcs,
             module_path = ctx.files.srcs[0].dirname,
         ),
     ]
