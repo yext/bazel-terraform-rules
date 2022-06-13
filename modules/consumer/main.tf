@@ -1,8 +1,8 @@
 module "constants" {
-  source = "../constants"
+  source = "./constants"
 }
 
 module "nested_directories" {
-  source = "../nested/directories"
+  source = "./nested_directories"
 }
 

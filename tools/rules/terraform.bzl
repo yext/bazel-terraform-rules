@@ -2,8 +2,8 @@ load("@tf_modules//tools/rules:module.bzl", "TerraformModuleInfo")
 
 def _terraform_executable_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
-  runfiles = ctx.runfiles(module.srcs + module.deps.to_list() + [ctx.executable.terraform])
-  
+  module_default = ctx.attr.module[DefaultInfo]
+  runfiles = ctx.runfiles(module_default.files.to_list() + [ctx.executable.terraform])
   ctx.actions.write(
     output = ctx.outputs.executable,
     is_executable = True,
