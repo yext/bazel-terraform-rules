@@ -1,6 +1,6 @@
 TerraformModuleInfo = provider(
     doc = "Contains information about a Terraform module",
-    fields = ["module_path"],
+    fields = ["module_path", "provider_binaries"],
 )
 
 def _impl(ctx):
@@ -27,6 +27,18 @@ def _impl(ctx):
                 inputs=depset([item]),
                 arguments=[item.path, out.path],
                 command="cp $1 $2")
+    
+    for provider in ctx.attr.provider_binaries:
+        print(provider.label.name)
+        for f in provider.files.to_list():
+            print(f.basename)
+            out = ctx.actions.declare_file("terraform.d/plugins/linux_amd64/" + f.basename)
+            all_outputs += [out]
+            ctx.actions.run_shell(
+                outputs=[out],
+                inputs=depset([f]),
+                arguments=[f.path, out.path],
+                command="cp $1 $2")
 
     return [
         DefaultInfo(
@@ -48,5 +60,6 @@ terraform_module = rule(
             executable = True,
             cfg = "exec",
         ),
+        "provider_binaries": attr.label_list(allow_files = True),
     },
 )

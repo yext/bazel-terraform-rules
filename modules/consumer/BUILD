@@ -6,5 +6,5 @@ terraform_module(
         "//modules/constants",
         "//modules/transitive",
     ],
-    terraform_executable = "@terraform_toolchain-0.12.24//:terraform_executable"
+    terraform_executable = "@terraform_toolchain-0.12.24//:terraform_executable",
 )
