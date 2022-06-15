@@ -27,12 +27,28 @@ def _impl(ctx):
                 inputs=depset([item]),
                 arguments=[item.path, out.path],
                 command="cp $1 $2")
-    
+
+    # Set the os name for the plugins dir 
+    os = ""
+    if ctx.target_platform_has_constraint(ctx.attr._darwin_constraint[platform_common.ConstraintValueInfo]):
+        os = "darwin"
+    if ctx.target_platform_has_constraint(ctx.attr._linux_constraint[platform_common.ConstraintValueInfo]):
+        os = "linux"
+
     for provider in ctx.attr.provider_binaries:
-        print(provider.label.name)
+        for f in provider.files.to_list():
+            out = ctx.actions.declare_file("terraform.d/plugins/{}_amd64/".format(os) + f.basename)
+            all_outputs += [out]
+            ctx.actions.run_shell(
+                outputs=[out],
+                inputs=depset([f]),
+                arguments=[f.path, out.path],
+                command="cp $1 $2")
+
+    for provider in ctx.attr.provider_binaries:
         for f in provider.files.to_list():
             print(f.basename)
-            out = ctx.actions.declare_file("terraform.d/plugins/linux_amd64/" + f.basename)
+            out = ctx.actions.declare_file("terraform.d/plugins/terraform.example.com/examplecorp/example/1.0.0/{}_amd64/".format(os) + f.basename)
             all_outputs += [out]
             ctx.actions.run_shell(
                 outputs=[out],
@@ -61,5 +77,7 @@ terraform_module = rule(
             cfg = "exec",
         ),
         "provider_binaries": attr.label_list(allow_files = True),
+        '_darwin_constraint': attr.label(default = '@platforms//os:macos'),
+        '_linux_constraint': attr.label(default = '@platforms//os:linux'),
     },
 )
