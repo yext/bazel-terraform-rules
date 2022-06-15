@@ -46,9 +46,12 @@ def _impl(ctx):
                 command="cp $1 $2")
 
     for provider in ctx.attr.provider_binaries:
+        if not provider in ctx.attr.provider_versions.keys():
+            continue
+        providerVersion = ctx.attr.provider_versions[provider]
         for f in provider.files.to_list():
             print(f.basename)
-            out = ctx.actions.declare_file("terraform.d/plugins/terraform.example.com/examplecorp/example/1.0.0/{}_amd64/".format(os) + f.basename)
+            out = ctx.actions.declare_file("terraform.d/plugins/{1}/{0}_amd64/".format(os,providerVersion) + f.basename)
             all_outputs += [out]
             ctx.actions.run_shell(
                 outputs=[out],
@@ -77,6 +80,7 @@ terraform_module = rule(
             cfg = "exec",
         ),
         "provider_binaries": attr.label_list(allow_files = True),
+        "provider_versions": attr.label_keyed_string_dict(allow_files = True),
         '_darwin_constraint': attr.label(default = '@platforms//os:macos'),
         '_linux_constraint': attr.label(default = '@platforms//os:linux'),
     },
