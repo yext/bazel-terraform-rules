@@ -630,13 +630,22 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
 
-load("@tf_modules//tools:toolchains.bzl", "terraform_register_toolchains")
+load("@tf_modules//tools/toolchains/terraform:toolchain.bzl", "register_terraform_toolchain")
 
-terraform_register_toolchains(terraform_versions = [
-    "1.2.2",
-    "0.12.23",
-    "0.12.24",
-])
+register_terraform_toolchain("1.2.2",checksums={
+    "darwin_amd64": "",
+    "linux_amd64": "2934a0e8824925beb956b2edb5fef212a6141c089d29d8568150a43f95b3a626",
+    },
+    default=True,
+)
+register_terraform_toolchain("0.12.24", checksums={
+    "darwin_amd64": "72482000a5e25c33e88e95d70208304acfd09bf855a7ede110da032089d13b4f",
+    "linux_amd64": "602d2529aafdaa0f605c06adb7c72cfb585d8aa19b3f4d8d189b42589e27bf11",
+})
+register_terraform_toolchain("0.12.23", checksums={
+    "darwin_amd64": "ca1a0bc58b4e482d0bdcaee95d002f4901094935fd4b184f57563a5c34fd18d9",
+    "linux_amd64": "78fd53c0fffd657ee0ab5decac604b0dea2e6c0d4199a9f27db53f081d831a45",
+})
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 

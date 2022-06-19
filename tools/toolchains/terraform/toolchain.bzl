@@ -1,24 +1,11 @@
-terraform_checksums = {
-    "darwin_amd64": {
-        "0.12.23": "ca1a0bc58b4e482d0bdcaee95d002f4901094935fd4b184f57563a5c34fd18d9",
-        "0.12.24": "72482000a5e25c33e88e95d70208304acfd09bf855a7ede110da032089d13b4f",
-        "1.2.2": "",
-    },
-    "linux_amd64": {
-        "0.12.23": "78fd53c0fffd657ee0ab5decac604b0dea2e6c0d4199a9f27db53f081d831a45",
-        "0.12.24": "602d2529aafdaa0f605c06adb7c72cfb585d8aa19b3f4d8d189b42589e27bf11",
-        "1.2.2": "2934a0e8824925beb956b2edb5fef212a6141c089d29d8568150a43f95b3a626"
-    },
-}
-
-def get_dependencies(version):
-    darwin_versions = terraform_checksums["darwin_amd64"]
-    linux_versions = terraform_checksums["linux_amd64"]
+def get_dependencies(version, terraform_checksums):
+    darwin_checksum = terraform_checksums["darwin_amd64"]
+    linux_checksum = terraform_checksums["linux_amd64"]
     return {
         "darwin_amd64": {
             "os": "darwin",
             "arch": "amd64",
-            "sha": darwin_versions[version],
+            "sha": darwin_checksum,
             "exec_compatible_with": [
                 "@platforms//os:osx",
                 "@platforms//cpu:x86_64",
@@ -31,7 +18,7 @@ def get_dependencies(version):
         "linux_amd64": {
             "os": "linux",
             "arch": "amd64",
-            "sha": linux_versions[version],
+            "sha": linux_checksum,
             "exec_compatible_with": [
                 "@platforms//os:linux",
                 "@platforms//cpu:x86_64",
@@ -65,8 +52,7 @@ terraform_toolchain = rule(
     },
 )
 
-def declare_terraform_toolchain(version):
-    dependencies = get_dependencies(version)
+def declare_terraform_toolchains(version, dependencies):
     for key, info in dependencies.items():
         url = _format_url(version, info["os"], info["arch"])
         name = "terraform_{}".format(key)
@@ -95,7 +81,7 @@ def _detect_platform_arch(ctx):
 
     return platform, arch
 
-def _terraform_build_file(ctx, platform, version):
+def _terraform_build_file(ctx, platform, version, terraform_checksums):
     ctx.template(
         "BUILD",
         Label("@tf_modules//tools/toolchains/terraform:BUILD.toolchain"),
@@ -103,6 +89,7 @@ def _terraform_build_file(ctx, platform, version):
         substitutions = {
             "{name}": "terraform_executable",
             "{version}": version,
+            "{dependencies}": str(get_dependencies(version, terraform_checksums)),
         },
     )
 
@@ -113,10 +100,10 @@ def _format_url(version, os, arch):
 def _impl(ctx):
     platform, arch = _detect_platform_arch(ctx)
     version = ctx.attr.version
-    _terraform_build_file(ctx, platform, version)
+    _terraform_build_file(ctx, platform, version, ctx.attr.checksums)
 
     host = "{}_{}".format(platform, arch)
-    info = get_dependencies(version)[host]
+    info = get_dependencies(version, ctx.attr.checksums)[host]
 
     ctx.download_and_extract(
         url = _format_url(version, info["os"], info["arch"]),
@@ -129,16 +116,19 @@ _terraform_register_toolchains = repository_rule(
     implementation = _impl,
     attrs = {
         "version": attr.string(),
+        "checksums": attr.string_dict(allow_empty=False),
     },
 )
 
-def register_terraform_toolchain(versions = []):
-    _terraform_register_toolchains(
-        name = "terraform_toolchain",
-        version = versions[0],
-    )
-    for version in versions:
+def register_terraform_toolchain(version, checksums, default = False):
+    if default:
         _terraform_register_toolchains(
-            name = "terraform_toolchain-" + version,
+            name = "terraform_toolchain",
             version = version,
+            checksums = checksums,
         )
+    _terraform_register_toolchains(
+        name = "terraform_toolchain-" + version,
+        version = version,
+        checksums = checksums,
+    )

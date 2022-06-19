@@ -50,7 +50,6 @@ def _impl(ctx):
             continue
         providerVersion = ctx.attr.provider_versions[provider]
         for f in provider.files.to_list():
-            print(f.basename)
             out = ctx.actions.declare_file("terraform.d/plugins/{1}/{0}_amd64/".format(os,providerVersion) + f.basename)
             all_outputs += [out]
             ctx.actions.run_shell(
