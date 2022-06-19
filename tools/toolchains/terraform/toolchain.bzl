@@ -30,39 +30,12 @@ def get_dependencies(version, terraform_checksums):
         },
     }
 
-TerraformInfo = provider(
-    doc = "Information about how to invoke Terraform.",
-    fields = ["sha", "url"],
-)
-
-def _terraform_toolchain_impl(ctx):
-    toolchain_info = platform_common.ToolchainInfo(
-        terraform = TerraformInfo(
-            sha = ctx.attr.sha,
-            url = ctx.attr.url,
-        ),
-    )
-    return [toolchain_info]
-
-terraform_toolchain = rule(
-    implementation = _terraform_toolchain_impl,
-    attrs = {
-        "sha": attr.string(),
-        "url": attr.string(),
-    },
-)
-
 def declare_terraform_toolchains(version, dependencies):
     for key, info in dependencies.items():
         url = _format_url(version, info["os"], info["arch"])
         name = "terraform_{}".format(key)
         toolchain_name = "{}_toolchain".format(name)
 
-        terraform_toolchain(
-            name = name,
-            url = url,
-            sha = info["sha"],
-        )
         native.toolchain(
             name = toolchain_name,
             exec_compatible_with = info["exec_compatible_with"],
