@@ -1,34 +1,13 @@
 def get_dependencies(version, terraform_checksums):
-    darwin_checksum = terraform_checksums["darwin_amd64"]
-    linux_checksum = terraform_checksums["linux_amd64"]
-    return {
-        "darwin_amd64": {
-            "os": "darwin",
-            "arch": "amd64",
-            "sha": darwin_checksum,
-            "exec_compatible_with": [
-                "@platforms//os:osx",
-                "@platforms//cpu:x86_64",
-            ],
-            "target_compatible_with": [
-                "@platforms//os:osx",
-                "@platforms//cpu:x86_64",
-            ],
-        },
-        "linux_amd64": {
-            "os": "linux",
-            "arch": "amd64",
-            "sha": linux_checksum,
-            "exec_compatible_with": [
-                "@platforms//os:linux",
-                "@platforms//cpu:x86_64",
-            ],
-            "target_compatible_with": [
-                "@platforms//os:linux",
-                "@platforms//cpu:x86_64",
-            ],
-        },
-    }
+    out = {}
+    for platform in terraform_checksums:
+        out[platform] = {
+            "platform": platform,
+            "sha": terraform_checksums[platform],
+            "exec_compatible_with": compatibility[platform],
+            "target_compatible_with": compatibility[platform],
+        }
+    return out
 
 def declare_terraform_toolchains(version, dependencies):
     for key, info in dependencies.items():
@@ -53,7 +32,7 @@ def _detect_platform_arch(ctx):
 
     return platform, arch
 
-def _terraform_build_file(ctx, platform, version, terraform_checksums):
+def _terraform_build_file(ctx, version, terraform_checksums):
     ctx.template(
         "BUILD",
         Label("@tf_modules//tools/toolchains/terraform:BUILD.toolchain"),
@@ -65,20 +44,37 @@ def _terraform_build_file(ctx, platform, version, terraform_checksums):
         },
     )
 
-def _format_url(version, os, arch):
-    url_template = "https://releases.hashicorp.com/terraform/{version}/terraform_{version}_{os}_{arch}.zip"
-    return url_template.format(version = version, os = os, arch = arch)
+# Mapping compatibility of Terraform versions to Bazel platforms
+# Based on list at: https://releases.hashicorp.com/terraform/1.2.3/
+compatibility = {
+    "darwin_amd64": [
+        "@platforms//os:osx",
+        "@platforms//cpu:x86_64",
+    ],
+    "darwin_arm64": [
+        "@platforms//os:osx",
+        "@platforms//cpu:aarch64",
+    ],
+    "linux_amd64": [
+        "@platforms//os:osx",
+        "@platforms//cpu:x86_64",
+    ],
+}
+
+def _format_url(version, platform):
+    url_template = "https://releases.hashicorp.com/terraform/{version}/terraform_{version}_{platform}.zip"
+    return url_template.format(version = version, platform=platform)
 
 def _impl(ctx):
     platform, arch = _detect_platform_arch(ctx)
     version = ctx.attr.version
-    _terraform_build_file(ctx, platform, version, ctx.attr.checksums)
+    _terraform_build_file(ctx, version, ctx.attr.checksums)
 
     host = "{}_{}".format(platform, arch)
     info = get_dependencies(version, ctx.attr.checksums)[host]
 
     ctx.download_and_extract(
-        url = _format_url(version, info["os"], info["arch"]),
+        url = _format_url(version, info["platform"]),
         sha256 = info["sha"],
         type = "zip",
         output = "terraform",
