@@ -32,7 +32,6 @@ def get_dependencies(version, terraform_checksums):
 
 def declare_terraform_toolchains(version, dependencies):
     for key, info in dependencies.items():
-        url = _format_url(version, info["os"], info["arch"])
         name = "terraform_{}".format(key)
         toolchain_name = "{}_toolchain".format(name)
 
