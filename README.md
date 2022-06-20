@@ -19,7 +19,7 @@ TF_MODULES_VERSION="0.0.3"
 http_archive(
     name = "tf_modules",
     urls = ["https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/{}.tar.gz".format(TF_MODULES_VERSION)],
-    sha256 = "905b5f68c5cc15dfb72a99dcc2fbb2dde6bfebce6932b7957f3fd602f897082a",
+    sha256 = "dfb9e22c7d80956261a76c477dfc256e8dc92047d3225caceb3e8264e7966c8a",
     strip_prefix = "bazel-terraform-rules-{}".format(TF_MODULES_VERSION),
 )
 
