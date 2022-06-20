@@ -15,7 +15,7 @@ where there are complex directory structures for shared modules, and different m
 First, you will need to add this repo as a dependency. Add the below to your `WORKSPACE` file:
 
 ```
-TF_MODULES_VERSION="0.0.2"
+TF_MODULES_VERSION="0.0.3"
 http_archive(
     name = "tf_modules",
     urls = ["https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/{}.tar.gz".format(TF_MODULES_VERSION)],

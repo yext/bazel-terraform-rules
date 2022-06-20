@@ -1,6 +1,6 @@
 TerraformModuleInfo = provider(
     doc = "Contains information about a Terraform module",
-    fields = ["module_path", "provider_binaries"],
+    fields = ["module_path"],
 )
 
 def _impl(ctx):
@@ -20,7 +20,13 @@ def _impl(ctx):
     # The path to each dependency will be the full path from the workspace root.
     for dep in ctx.attr.module_deps:
         for item in dep[DefaultInfo].files.to_list():
-            out = ctx.actions.declare_file(item.short_path)
+            
+            # Ensure plugins are all in the root of the module hierarchy
+            path = item.short_path
+            if path.startswith(dep[TerraformModuleInfo].module_path + "/terraform.d"):
+                path = path.replace(dep[TerraformModuleInfo].module_path + "/","")
+
+            out = ctx.actions.declare_file(path)
             all_outputs += [out]
             ctx.actions.run_shell(
                 outputs=[out],
