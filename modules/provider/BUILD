@@ -1,5 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
-load("@tf_modules//tools:def.bzl", "terraform_module")
+load("@tf_modules//:def.bzl", "terraform_module")
 
 terraform_module(
     name = "provider",

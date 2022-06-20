@@ -1,4 +1,4 @@
-load("@tf_modules//tools:def.bzl", "terraform_module")
+load("@tf_modules//:def.bzl", "terraform_module")
 
 terraform_module(
     name = "constants",
