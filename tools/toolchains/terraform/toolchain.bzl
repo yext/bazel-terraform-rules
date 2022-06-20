@@ -1,12 +1,15 @@
-def get_dependencies(version, terraform_checksums):
+load("@tf_modules//tools/toolchains/terraform:versions.bzl", "VERSIONS")
+
+def get_dependencies(version):
     out = {}
-    for platform in terraform_checksums:
-        out[platform] = {
-            "platform": platform,
-            "sha": terraform_checksums[platform],
-            "exec_compatible_with": compatibility[platform],
-            "target_compatible_with": compatibility[platform],
-        }
+    for platform in VERSIONS[version]:
+        if platform in compatibility.keys():
+            out[platform] = {
+                "platform": platform,
+                "sha": VERSIONS[version][platform]["sha"],
+                "exec_compatible_with": compatibility[platform],
+                "target_compatible_with": compatibility[platform],
+            }
     return out
 
 def declare_terraform_toolchains(version, dependencies):
@@ -32,7 +35,7 @@ def _detect_platform_arch(ctx):
 
     return platform, arch
 
-def _terraform_build_file(ctx, version, terraform_checksums):
+def _terraform_build_file(ctx, version):
     ctx.template(
         "BUILD",
         Label("@tf_modules//tools/toolchains/terraform:BUILD.toolchain"),
@@ -40,7 +43,7 @@ def _terraform_build_file(ctx, version, terraform_checksums):
         substitutions = {
             "{name}": "terraform_executable",
             "{version}": version,
-            "{dependencies}": str(get_dependencies(version, terraform_checksums)),
+            "{dependencies}": str(get_dependencies(version)),
         },
     )
 
@@ -61,20 +64,19 @@ compatibility = {
     ],
 }
 
-def _format_url(version, platform):
-    url_template = "https://releases.hashicorp.com/terraform/{version}/terraform_{version}_{platform}.zip"
-    return url_template.format(version = version, platform=platform)
+def _get_url(version, platform):
+    return VERSIONS[version][platform]["url"]
 
 def _impl(ctx):
     platform, arch = _detect_platform_arch(ctx)
     version = ctx.attr.version
-    _terraform_build_file(ctx, version, ctx.attr.checksums)
+    _terraform_build_file(ctx, version)
 
     host = "{}_{}".format(platform, arch)
-    info = get_dependencies(version, ctx.attr.checksums)[host]
+    info = get_dependencies(version)[host]
 
     ctx.download_and_extract(
-        url = _format_url(version, info["platform"]),
+        url = _get_url(version, info["platform"]),
         sha256 = info["sha"],
         type = "zip",
         output = "terraform",
@@ -84,19 +86,16 @@ _terraform_register_toolchains = repository_rule(
     implementation = _impl,
     attrs = {
         "version": attr.string(),
-        "checksums": attr.string_dict(allow_empty=False),
     },
 )
 
-def register_terraform_toolchain(version, checksums, default = False):
+def register_terraform_toolchain(version, default = False):
     if default:
         _terraform_register_toolchains(
             name = "terraform_toolchain",
             version = version,
-            checksums = checksums,
         )
     _terraform_register_toolchains(
         name = "terraform_toolchain-" + version,
         version = version,
-        checksums = checksums,
     )
