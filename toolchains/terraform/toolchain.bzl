@@ -1,4 +1,4 @@
-load("@tf_modules//tools/toolchains/terraform:versions.bzl", "VERSIONS")
+load("@tf_modules//toolchains/terraform:versions.bzl", "VERSIONS")
 
 def get_dependencies(version):
     out = {}
@@ -22,7 +22,7 @@ def declare_terraform_toolchains(version, dependencies):
             exec_compatible_with = info["exec_compatible_with"],
             target_compatible_with = info["target_compatible_with"],
             toolchain = name,
-            toolchain_type = "@tf_modules//tools/toolchains/terraform:toolchain_type",
+            toolchain_type = "@tf_modules//toolchains/terraform:toolchain_type",
         )
 
 def _detect_platform_arch(ctx):
@@ -38,7 +38,7 @@ def _detect_platform_arch(ctx):
 def _terraform_build_file(ctx, version):
     ctx.template(
         "BUILD",
-        Label("@tf_modules//tools/toolchains/terraform:BUILD.toolchain"),
+        Label("@tf_modules//toolchains/terraform:BUILD.toolchain"),
         executable = False,
         substitutions = {
             "{name}": "terraform_executable",

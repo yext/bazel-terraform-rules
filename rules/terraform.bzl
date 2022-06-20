@@ -1,4 +1,4 @@
-load("@tf_modules//tools/rules:module.bzl", "TerraformModuleInfo")
+load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
 
 def _terraform_executable_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
