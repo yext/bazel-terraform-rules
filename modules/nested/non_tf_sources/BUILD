@@ -1,6 +1,7 @@
 load("@tf_modules//:def.bzl", "terraform_module")
 
 terraform_module(
-    name = "directories",
+    name = "non_tf_sources",
     srcs_tf = glob(["*.tf"]),
+    srcs_other = ["//modules/nested/non_tf_sources/data:value3.txt"]
 )

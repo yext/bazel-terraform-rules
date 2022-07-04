@@ -3,6 +3,7 @@ load("@tf_modules//:def.bzl", "terraform_module")
 
 terraform_module(
     name = "provider",
+    srcs_tf = glob(["*.tf"]),
     #terraform_executable = "@terraform_toolchain-0.12.24//:terraform_executable",
     provider_binaries = [":terraform-provider-example"],
     provider_versions = {

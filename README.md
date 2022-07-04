@@ -15,7 +15,7 @@ where there are complex directory structures for shared modules, and different m
 First, you will need to add this repo as a dependency. Add the below to your `WORKSPACE` file:
 
 ```
-TF_MODULES_VERSION="0.0.3"
+TF_MODULES_VERSION="0.0.4"
 http_archive(
     name = "tf_modules",
     urls = ["https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/{}.tar.gz".format(TF_MODULES_VERSION)],
@@ -45,12 +45,14 @@ load("@tf_modules//:def.bzl", "terraform_module")
 
 terraform_module(
     name = "mymodule",
+    srcs_tf = glob(["*.tf"]),
     terraform_executable = "@terraform_toolchain-1.2.0//:terraform_executable",
 )
 ```
 
-The above example will create a module called "mymodule", using Terraform version 1.2.0. All `.tf` files in the directory will
-be included in your module's sources automatically.
+The above example will create a module called "mymodule", using Terraform version 1.2.0. The `srcs_tf` accepts any ".tf" files to include
+in your module. These files will be flattened into a single directory for the module. For files with other extensions, use `srcs_other` - these
+files will not be flattened and their directory structure will be preserved.
 
 ## Running Terraform
 
@@ -68,6 +70,7 @@ You can specify dependencies on other modules using the `module_deps` parameter 
 ```
 terraform_module(
     name = "mymodule",
+    srcs_tf = glob(["*.tf"]),
     module_deps = [
         "//modules/module_a",
         "//modules/module_b",
@@ -96,6 +99,7 @@ The `terraform_module` rule also allows you to build and use custom Terraform pr
 ```
 terraform_module(
     name = "using_provider",
+    srcs_tf = glob(["*.tf"]),
     provider_binaries = [":terraform-provider-example"],
     provider_versions = {
         ":terraform-provider-example": "terraform.example.com/examplecorp/example/1.0.0",

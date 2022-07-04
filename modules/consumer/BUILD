@@ -2,6 +2,7 @@ load("@tf_modules//:def.bzl", "terraform_module")
 
 terraform_module(
     name = "consumer",
+    srcs_tf = glob(["*.tf"]),
     module_deps = [
         "//modules/constants",
         "//modules/transitive",

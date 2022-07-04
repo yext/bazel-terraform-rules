@@ -2,7 +2,9 @@ load("@tf_modules//rules:module.bzl", _terraform_module = "terraform_module")
 load("@tf_modules//rules:terraform.bzl", _terraform_executable = "terraform_executable")
 
 def terraform_module(
-    name, 
+    name,
+    srcs_tf = [],
+    srcs_other = [],
     module_deps = [], 
     provider_binaries=[], 
     provider_versions={}, 
@@ -10,7 +12,8 @@ def terraform_module(
     ):
     _terraform_module(
         name = name,
-        srcs = native.glob(["*.tf"]),
+        srcs_tf = srcs_tf,
+        srcs_other = srcs_other,
         module_deps = module_deps,
         provider_binaries = provider_binaries,
         provider_versions = provider_versions,
