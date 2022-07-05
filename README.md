@@ -15,16 +15,29 @@ where there are complex directory structures for shared modules, and different m
 First, you will need to add this repo as a dependency. Add the below to your `WORKSPACE` file:
 
 ```
-TF_MODULES_VERSION="0.0.4"
+# Skylib dependency required for Terraform rules
+http_archive(
+    name = "bazel_skylib",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.2.1/bazel-skylib-1.2.1.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.2.1/bazel-skylib-1.2.1.tar.gz",
+    ],
+    sha256 = "f7be3474d42aae265405a592bb7da8e171919d74c16f082a5457840f06054728",
+)
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+bazel_skylib_workspace()
+
+# Add Terraform rules as repository
+TF_MODULES_VERSION="0.0.6"
 http_archive(
     name = "tf_modules",
     urls = ["https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/{}.tar.gz".format(TF_MODULES_VERSION)],
-    sha256 = "dfb9e22c7d80956261a76c477dfc256e8dc92047d3225caceb3e8264e7966c8a",
+    sha256 = "37f661b07f6a1e6f9ebe0798e54a273528350f66ac9bc388e3bec225d39a4877",
     strip_prefix = "bazel-terraform-rules-{}".format(TF_MODULES_VERSION),
 )
-
 load("@tf_modules//toolchains/terraform:toolchain.bzl", "register_terraform_toolchain")
 
+# Register required Terraform versions
 register_terraform_toolchain("1.2.3", default=True)
 ```
 
