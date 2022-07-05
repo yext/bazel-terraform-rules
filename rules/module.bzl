@@ -2,16 +2,16 @@ load("@bazel_skylib//lib:paths.bzl", "paths")
 
 TerraformModuleInfo = provider(
     doc = "Contains information about a Terraform module",
-    fields = ["module_path"],
+    fields = ["module_path", "build_base_path"],
 )
 
 def _impl(ctx):
     all_outputs = []
-    module_path = paths.dirname(ctx.build_file_path)
+    build_base_path = paths.dirname(ctx.build_file_path)
 
     # Copy source files relative to the module path.
     for f in ctx.files.srcs:
-        out_path = paths.relativize(f.short_path,module_path)
+        out_path = paths.relativize(f.short_path,build_base_path)
         out = ctx.actions.declare_file(out_path)
         all_outputs += [out]
         ctx.actions.run_shell(
@@ -20,7 +20,7 @@ def _impl(ctx):
             arguments=[f.path, out.path],
             command="cp $1 $2")
 
-    # Copy "flattened" sourc files to the root of the module path.
+    # Copy "flattened" source files to the root of the module path.
     for f in ctx.files.srcs_flatten:
         out = ctx.actions.declare_file(f.basename)
         all_outputs += [out]
@@ -36,7 +36,7 @@ def _impl(ctx):
         for item in dep[DefaultInfo].files.to_list():
             
             # Ensure plugins are all in the root of the module hierarchy
-            path = item.short_path
+            path = item.short_path.replace(dep[TerraformModuleInfo].build_base_path, dep[TerraformModuleInfo].module_path)
             if path.startswith(dep[TerraformModuleInfo].module_path + "/terraform.d"):
                 path = path.replace(dep[TerraformModuleInfo].module_path + "/","")
 
@@ -78,18 +78,28 @@ def _impl(ctx):
                 arguments=[f.path, out.path],
                 command="cp $1 $2")
 
+    # Set the module source path for this module appropriately
+    module_path = ctx.attr.module_path
+    if module_path == "":
+        module_path = build_base_path
+
     return [
         DefaultInfo(
             files = depset(all_outputs),
         ),
         TerraformModuleInfo(
             module_path = module_path,
+            build_base_path = build_base_path
         ),
     ]
 
 terraform_module = rule(
     implementation = _impl,
     attrs = {
+        "module_path": attr.string(
+            default = "",
+            doc = "The path to be used in the 'source' attribute of module blocks to refer to this module. If not set, the rule will use the path from the root of the workspace to the module's Bazel build file."
+        ),
         "srcs": attr.label_list(allow_files = True),
         "srcs_flatten": attr.label_list(allow_files = True),
         "module_deps": attr.label_list(providers = [TerraformModuleInfo]),

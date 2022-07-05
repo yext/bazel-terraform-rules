@@ -37,6 +37,7 @@ func TestConsumer(t *testing.T) {
 	check_value(t, "nested_directories_constant", "test_value2", terraformOptions)
 	check_value(t, "nested_non_tf_constant_from_src", "test_value3", terraformOptions)
 	check_value(t, "nested_non_tf_constant_flattened", "flattened", terraformOptions)
+	check_value(t, "alternate_path_constant", "alternate_source_value", terraformOptions)
 }
 
 func check_value(t *testing.T, key string, expectedValue string, terraformOptions *terraform.Options) {
