@@ -45,14 +45,16 @@ load("@tf_modules//:def.bzl", "terraform_module")
 
 terraform_module(
     name = "mymodule",
-    srcs_tf = glob(["*.tf"]),
+    srcs = glob(["*.tf"]),
     terraform_executable = "@terraform_toolchain-1.2.0//:terraform_executable",
 )
 ```
 
-The above example will create a module called "mymodule", using Terraform version 1.2.0. The `srcs_tf` accepts any ".tf" files to include
-in your module. These files will be flattened into a single directory for the module. For files with other extensions, use `srcs_other` - these
-files will not be flattened and their directory structure will be preserved.
+The above example will create a module called "mymodule", using Terraform version 1.2.0. The `srcs` attribute accepts any files to include
+in your module, retaining any directory structure relative to your module's BUILD file.
+
+You may also include files from any other directories and flatten them into your module directory using `srcs_flatten`. This could be used,
+for example, to share a file between modules without making copies or symlinks.
 
 ## Running Terraform
 
@@ -70,7 +72,7 @@ You can specify dependencies on other modules using the `module_deps` parameter 
 ```
 terraform_module(
     name = "mymodule",
-    srcs_tf = glob(["*.tf"]),
+    srcs = glob(["*.tf"]),
     module_deps = [
         "//modules/module_a",
         "//modules/module_b",
@@ -92,6 +94,9 @@ module "b" {
 }
 ```
 
+You may also include other modules relative to yours within your `src` files. This allows you to preserve an existing directory structure, but may result
+in your modules being less reusable within your workspace.
+
 ## Custom Providers
 
 The `terraform_module` rule also allows you to build and use custom Terraform providers in the same repo.
@@ -99,7 +104,7 @@ The `terraform_module` rule also allows you to build and use custom Terraform pr
 ```
 terraform_module(
     name = "using_provider",
-    srcs_tf = glob(["*.tf"]),
+    srcs = glob(["*.tf"]),
     provider_binaries = [":terraform-provider-example"],
     provider_versions = {
         ":terraform-provider-example": "terraform.example.com/examplecorp/example/1.0.0",

@@ -9,9 +9,10 @@ def _impl(ctx):
     all_outputs = []
     module_path = paths.dirname(ctx.build_file_path)
 
-    # Copy source Terraform files to the root of the target output.
-    for f in ctx.files.srcs_tf:
-        out = ctx.actions.declare_file(f.basename)
+    # Copy source files relative to the module path.
+    for f in ctx.files.srcs:
+        out_path = paths.relativize(f.short_path,module_path)
+        out = ctx.actions.declare_file(out_path)
         all_outputs += [out]
         ctx.actions.run_shell(
             outputs=[out],
@@ -19,10 +20,9 @@ def _impl(ctx):
             arguments=[f.path, out.path],
             command="cp $1 $2")
 
-    # Copy non-Terraform source files as appropriate.
-    for f in ctx.files.srcs_other:
-        out_path = paths.relativize(f.short_path,module_path)
-        out = ctx.actions.declare_file(out_path)
+    # Copy "flattened" sourc files to the root of the module path.
+    for f in ctx.files.srcs_flatten:
+        out = ctx.actions.declare_file(f.basename)
         all_outputs += [out]
         ctx.actions.run_shell(
             outputs=[out],
@@ -90,8 +90,8 @@ def _impl(ctx):
 terraform_module = rule(
     implementation = _impl,
     attrs = {
-        "srcs_tf": attr.label_list(allow_files = [".tf"]),
-        "srcs_other": attr.label_list(allow_files = True),
+        "srcs": attr.label_list(allow_files = True),
+        "srcs_flatten": attr.label_list(allow_files = True),
         "module_deps": attr.label_list(providers = [TerraformModuleInfo]),
         "terraform": attr.label(
             default = Label("@terraform_toolchain//:terraform_executable"),

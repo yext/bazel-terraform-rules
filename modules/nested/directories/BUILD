@@ -2,5 +2,5 @@ load("@tf_modules//:def.bzl", "terraform_module")
 
 terraform_module(
     name = "directories",
-    srcs_tf = glob(["*.tf"]),
+    srcs = glob(["*.tf"]),
 )

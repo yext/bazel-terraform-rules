@@ -12,7 +12,6 @@ BASE_DIR=$(pwd)
 cd {0}
 $BASE_DIR/{1} init -reconfigure
 $BASE_DIR/{1} $@
-pwd
 """.format(module.module_path,ctx.executable.terraform.short_path),
   )
   

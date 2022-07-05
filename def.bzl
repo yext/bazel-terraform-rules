@@ -3,8 +3,8 @@ load("@tf_modules//rules:terraform.bzl", _terraform_executable = "terraform_exec
 
 def terraform_module(
     name,
-    srcs_tf = [],
-    srcs_other = [],
+    srcs = [],
+    srcs_flatten = [],
     module_deps = [], 
     provider_binaries=[], 
     provider_versions={}, 
@@ -12,8 +12,8 @@ def terraform_module(
     ):
     _terraform_module(
         name = name,
-        srcs_tf = srcs_tf,
-        srcs_other = srcs_other,
+        srcs = srcs,
+        srcs_flatten = srcs_flatten,
         module_deps = module_deps,
         provider_binaries = provider_binaries,
         provider_versions = provider_versions,

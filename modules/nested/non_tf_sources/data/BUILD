@@ -1,1 +1,1 @@
-exports_files(["value3.txt"])
+exports_files(["fromsrc.txt","flatten.txt"])
