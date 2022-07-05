@@ -28,11 +28,11 @@ load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
 
 # Add Terraform rules as repository
-TF_MODULES_VERSION="0.0.6"
+TF_MODULES_VERSION="0.0.7"
 http_archive(
     name = "tf_modules",
     urls = ["https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/{}.tar.gz".format(TF_MODULES_VERSION)],
-    sha256 = "37f661b07f6a1e6f9ebe0798e54a273528350f66ac9bc388e3bec225d39a4877",
+    sha256 = "d8ffda4de088613914b7da6e1f9ff79053440dae56fc8add58e93a9692df36f6",
     strip_prefix = "bazel-terraform-rules-{}".format(TF_MODULES_VERSION),
 )
 load("@tf_modules//toolchains/terraform:toolchain.bzl", "register_terraform_toolchain")
