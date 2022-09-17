@@ -22,7 +22,7 @@ func main() {
 		panic(err)
 	}
 
-	f, err := os.Create(path.Join(os.Getenv("BUILD_WORKSPACE_DIRECTORY"), "tools", "toolchains", "terraform", "versions.bzl"))
+	f, err := os.Create(path.Join(os.Getenv("BUILD_WORKSPACE_DIRECTORY"), "toolchains", "terraform", "versions.bzl"))
 	if err != nil {
 		panic(err)
 	}

@@ -61,7 +61,7 @@ protobuf_deps()
 
 load("@tf_modules//toolchains/terraform:toolchain.bzl", "register_terraform_toolchain")
 
-register_terraform_toolchain("1.2.3", default=True)
+register_terraform_toolchain("1.2.9", default=True)
 register_terraform_toolchain("1.2.2")
 register_terraform_toolchain("0.12.24")
 register_terraform_toolchain("0.12.23")
