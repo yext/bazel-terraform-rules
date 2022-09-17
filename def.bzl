@@ -4,6 +4,7 @@ load("@tf_modules//rules:terraform.bzl", _terraform_executable = "terraform_exec
 def terraform_module(
     name,
     module_path = "",
+    tf_vars = {},
     srcs = [],
     srcs_flatten = [],
     module_deps = [], 
@@ -26,4 +27,5 @@ def terraform_module(
         name = "terraform",
         module = module_ref,
         terraform = terraform_executable,
+        tf_vars = tf_vars,
     )

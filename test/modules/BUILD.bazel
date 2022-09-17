@@ -6,6 +6,7 @@ go_test(
     data = [
         "//modules/constants",
         "//modules/consumer",
+        "//modules/vars",
         "@terraform_toolchain//:terraform_executable",
     ],
     tags = [
