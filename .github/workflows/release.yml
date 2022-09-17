@@ -41,4 +41,5 @@ jobs:
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.14
         with:
+          tag: "${{steps.tag_version.new_tag}}"
           body: "${{steps.build_changelog.outputs.changelog}}"
