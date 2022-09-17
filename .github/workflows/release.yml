@@ -3,31 +3,25 @@ name: Release
 on:
     workflow_dispatch:
       inputs:
-        releaseType:
-          description: "Release Type"
+        bumpType:
+          description: "Bump Type"
           required: true
-          default: 'patch'
           type: choice
-          options:
-          - major
-          - minor
-          - patch
-        description:
-          description: 'Description'
-          required: true
-          type: string
+          default: patch
+          options: 
+            - patch
+            - minor
+            - major
 
 jobs:
-  log-the-inputs:
+  release-version:
     runs-on: ubuntu-latest
-    env:
-      TYPE: ${{ inputs.releaseType }}
-      DESCRIPTION: ${{ inputs.description }}
-    steps:
-      - run: |
-          echo "Release type: $TYPE"
-          echo "Description:"
-          echo $DESCRIPTION
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          default_bump: "${{inputs.bumpType}}"
+          tag_prefix: ""
       - name: "Build Changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v3
@@ -37,16 +31,6 @@ jobs:
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Changelog</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
               "pr_template": "- #{{MERGE_SHA}}: #{{TITLE}}",
-              "categories": [
-                {
-                    "title": "## 💬 Other",
-                    "labels": ["other"]
-                },
-                {
-                    "title": "## 📦 Dependencies",
-                    "labels": ["dependencies"]
-                }
-              ]
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,5 +39,4 @@ jobs:
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.14
         with:
-          tag_name: test_release
           body: "${{steps.build_changelog.outputs.changelog}}"
