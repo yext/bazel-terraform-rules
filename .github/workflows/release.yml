@@ -35,8 +35,8 @@ jobs:
           commitMode: true
           configurationJson: |
             {
-              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
-              "pr_template": "#{{MERGE_SHA}} - #{{TITLE}} #{{URL}}",
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Changelog</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "pr_template": "- #{{MERGE_SHA}}: #{{TITLE}}",
               "categories": [
                 {
                     "title": "## 💬 Other",
