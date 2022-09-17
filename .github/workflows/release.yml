@@ -12,29 +12,19 @@ on:
           - major
           - minor
           - patch
-        logLevel:
-          description: 'Log level'
+        description:
+          description: 'Description'
           required: true
-          default: 'warning'
-          type: choice
-          options:
-          - info
-          - warning
-          - debug
-        tags:
-          description: 'Test scenario tags'
-          required: false
-          type: boolean
+          type: string
 
 jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
     env:
-      LEVEL: ${{ inputs.logLevel }}
-      TAGS: ${{ inputs.tags }}
       TYPE: ${{ inputs.releaseType }}
+      DESCRIPTION: ${{ inputs.description }}
     steps:
       - run: |
-          echo "Log level: $LEVEL"
-          echo "Tags: $TAGS"
           echo "Release type: $TYPE"
+          echo "Description:"
+          echo $DESCRIPTION
