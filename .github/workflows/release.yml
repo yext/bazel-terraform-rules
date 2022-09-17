@@ -36,7 +36,7 @@ jobs:
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
-              "pr_template": "#{{TITLE}}",
+              "pr_template": "#{{MERGE_SHA}} - #{{TITLE}} #{{URL}}",
               "categories": [
                 {
                     "title": "## 💬 Other",
