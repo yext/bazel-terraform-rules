@@ -31,7 +31,7 @@ jobs:
           commitMode: true
           configurationJson: |
             {
-              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Changelog</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Changes</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
               "pr_template": "* #{{MERGE_SHA}}: #{{TITLE}}",
               "categories": [
                 {
@@ -81,4 +81,6 @@ jobs:
             register_terraform_toolchain("1.2.3", default=True)
             ```
 
-            ${{steps.build_changelog.outputs.changelog}}"
+            # Changelog
+
+            ${{steps.build_changelog.outputs.changelog}}
