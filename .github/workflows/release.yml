@@ -33,6 +33,12 @@ jobs:
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Changelog</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
               "pr_template": "#{{MERGE_SHA}}: #{{TITLE}}",
+              "categories": [
+                {
+                  "title": "## 🚀 Features",
+                  "labels": ["feature"]
+                }
+              ]
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
