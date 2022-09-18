@@ -32,7 +32,7 @@ jobs:
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Changelog</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
-              "pr_template": "* #{{MERGE_SHA}}: #{{TITLE}}",
+              "pr_template": "#{{MERGE_SHA}}: #{{TITLE}}",
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
