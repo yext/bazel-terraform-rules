@@ -49,6 +49,17 @@ jobs:
         with:
           tag_name: "${{steps.tag_version.outputs.new_tag}}"
           body: |
+            Release notes TBD
+      - name: Retrieve version
+        run: |
+          curl https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/${{steps.tag_version.outputs.new_tag}}.tar.gz
+          echo "::set-output name=SRC_SHA256::$(sha256 ${{steps.tag_version.outputs.new_tag}}.tar.gz)')"
+        id: hash
+      - name: Update Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          tag_name: "${{steps.tag_version.outputs.new_tag}}"
+          body: |
             # Adding to your Workspace
 
             To use this version, add the following lines to your `WORKSPACE` file:
@@ -71,8 +82,7 @@ jobs:
             http_archive(
                 name = "tf_modules",
                 urls = ["https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/{}.tar.gz".format(TF_MODULES_VERSION)],
-                # Uncomment once this is written correctly
-                #sha256 = "d8ffda4de088613914b7da6e1f9ff79053440dae56fc8add58e93a9692df36f6",
+                sha256 = "${{steps.hash.outputs.SRC_SHA256}}",
                 strip_prefix = "bazel-terraform-rules-{}".format(TF_MODULES_VERSION),
             )
             load("@tf_modules//toolchains/terraform:toolchain.bzl", "register_terraform_toolchain")
@@ -84,9 +94,3 @@ jobs:
             # Changelog
 
             ${{steps.build_changelog.outputs.changelog}}
-      - name: Update Release
-        uses: softprops/action-gh-release@v0.1.14
-        with:
-          tag_name: "${{steps.tag_version.outputs.new_tag}}"
-          body: |
-            Release updated
