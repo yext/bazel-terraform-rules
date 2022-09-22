@@ -52,7 +52,7 @@ jobs:
             Release notes TBD
       - name: Retrieve version
         run: |
-          curl https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/${{steps.tag_version.outputs.new_tag}}.tar.gz
+          curl https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/${{steps.tag_version.outputs.new_tag}}.tar.gz -o bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz
           echo "::set-output name=SRC_SHA256::$(sha256sum bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz)"
         id: hash
       - name: Update Release
