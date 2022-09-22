@@ -84,3 +84,9 @@ jobs:
             # Changelog
 
             ${{steps.build_changelog.outputs.changelog}}
+      - name: Update Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          tag_name: "${{steps.tag_version.outputs.new_tag}}"
+          body: |
+            Release updated
