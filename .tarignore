@@ -10,4 +10,4 @@ bazel-tf-modules
 
 bazel-bazel-terraform-rules
 .github
-.tar.gz
+*.tar.gz

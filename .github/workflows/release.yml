@@ -46,7 +46,7 @@ jobs:
             echo "${{steps.build_changelog.outputs.changelog}}"
       - name: Tar source
         run: |
-          tar -czvf bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz .
+          tar -czvf --exclude-ignore=.tarignore bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz .
           echo "::set-output name=SRC_SHA256::$(sha256sum bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz | cut -d " " -f 1)"
         id: tar
       - name: Create Release
