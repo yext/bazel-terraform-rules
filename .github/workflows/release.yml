@@ -21,11 +21,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: src
-      - name: Tar source
-        run: |
-          tar --exclude-ignore=.tarignore -czvf bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz src/
-          echo "::set-output name=SRC_SHA256::$(sha256sum bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz | cut -d " " -f 1)"
-        id: tar
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
@@ -33,6 +28,11 @@ jobs:
           default_bump: "${{inputs.bumpType}}"
           tag_prefix: ""
           github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tar source
+        run: |
+          tar --exclude-ignore=.tarignore -czvf bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz src/
+          echo "::set-output name=SRC_SHA256::$(sha256sum bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz | cut -d " " -f 1)"
+        id: tar
       - name: "Build Changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v3
