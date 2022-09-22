@@ -50,7 +50,7 @@ jobs:
           tag_name: "${{steps.tag_version.outputs.new_tag}}"
           body: |
             Release notes TBD
-      - name: Retrieve version
+      - name: Retrieve hash
         run: |
           curl https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/${{steps.tag_version.outputs.new_tag}}.tar.gz -o bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz
           echo "::set-output name=SRC_SHA256::$(sha256sum bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz | cut -d " " -f 1)"
@@ -94,3 +94,7 @@ jobs:
             # Changelog
 
             ${{steps.build_changelog.outputs.changelog}}
+      - name: Retrieve hash again
+        run: |
+          curl https://github.com/theothertomelliott/bazel-terraform-rules/archive/refs/tags/${{steps.tag_version.outputs.new_tag}}.tar.gz -o bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz
+          echo "$(sha256sum bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz | cut -d " " -f 1)"
