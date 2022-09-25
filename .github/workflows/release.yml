@@ -42,7 +42,7 @@ jobs:
         id: tar
       - name: Test tar
         run: |
-          .github/workflows/release/scripts/local-release-test.sh "${{steps.tar.outputs.TAR_PATH}}" "${{steps.tar.outputs.SRC_SHA256}}"
+          src/.github/workflows/release/scripts/local-release-test.sh "${{steps.tar.outputs.TAR_PATH}}" "${{steps.tar.outputs.SRC_SHA256}}"
       - name: "Build Changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v3
@@ -64,7 +64,7 @@ jobs:
       - name: Installation instructions
         id: installation
         run: |
-          echo "::set-output name=INSTALLATION_INSTRUCTIONS::$(.github/workflows/release/scripts/installation-code "https://github.com/theothertomelliott/bazel-terraform-rules/releases/download/${{steps.tag_version.outputs.new_tag}}/bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz" ${{steps.tar.outputs.SRC_SHA256}})"
+          echo "::set-output name=INSTALLATION_INSTRUCTIONS::$(src/.github/workflows/release/scripts/installation-code "https://github.com/theothertomelliott/bazel-terraform-rules/releases/download/${{steps.tag_version.outputs.new_tag}}/bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz" ${{steps.tar.outputs.SRC_SHA256}})"
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.14
         with:
