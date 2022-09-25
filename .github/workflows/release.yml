@@ -34,7 +34,11 @@ jobs:
           tar --exclude-ignore=.tarignore -czvf ../bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz .
           popd
           echo "::set-output name=SRC_SHA256::$(sha256sum bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz | cut -d " " -f 1)"
+          echo "::set-output name=TAR_PATH::$(realpath bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz)"
         id: tar
+      - name: Test tar
+        run: |
+          .github/workflows/release/scripts/local-release-test.sh "${{steps.tar.outputs.TAR_PATH}}" "${{steps.tar.outputs.SRC_SHA256}}""
       - name: "Build Changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v3
@@ -53,6 +57,10 @@ jobs:
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Installation instructions
+        id: installation
+        run: |
+          echo "::set-output name=INSTALLATION_INSTRUCTIONS::$(.github/workflows/release/scripts/installation-code "https://github.com/theothertomelliott/bazel-terraform-rules/releases/download/${{steps.tag_version.outputs.new_tag}}/bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz" ${{steps.tar.outputs.SRC_SHA256}})"
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.14
         with:
@@ -64,23 +72,7 @@ jobs:
             To use this version, add the following lines to your `WORKSPACE` file:
 
             ```
-            # Import http_archive if not already in use
-            load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-            # Add Terraform rules as repository
-            TF_MODULES_VERSION="${{steps.tag_version.outputs.new_tag}}"
-            http_archive(
-                name = "tf_modules",
-                urls = ["https://github.com/theothertomelliott/bazel-terraform-rules/releases/download/{}/bazel-terraform-rules-{}.tar.gz".format(TF_MODULES_VERSION,TF_MODULES_VERSION)],
-                sha256 = "${{steps.tar.outputs.SRC_SHA256}}",
-            )
-            load("@tf_modules//toolchains/terraform:toolchain.bzl", "register_terraform_toolchain")
-
-            load("@tf_modules//:deps.bzl", "bazel_terraform_rules_deps")
-            bazel_terraform_rules_deps()
-
-            # Register required Terraform versions
-            register_terraform_toolchain("1.2.3", default=True)
+            ${{steps.installation.outputs.INSTALLATION_INSTRUCTIONS}}
             ```
 
             # Changelog
