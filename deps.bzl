@@ -1,5 +1,7 @@
 """Dependencies of bazel-terraform-rules."""
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 def bazel_terraform_rules_deps():
     # Skylib dependency required for Terraform rules
     http_archive(
