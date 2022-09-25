@@ -21,6 +21,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: src
+      - name: Dir info
+        run: |
+          pwd
+          ls -la
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
