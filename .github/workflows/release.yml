@@ -86,3 +86,6 @@ jobs:
             # Changelog
 
             ${{steps.build_changelog.outputs.changelog}}
+      - name: Verify instructions
+        run: |
+          src/.github/workflows/release/scripts/test-instructions.sh $(cat instructions.txt)
