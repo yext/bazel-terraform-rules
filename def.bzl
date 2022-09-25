@@ -24,16 +24,13 @@ def terraform_module(
         visibility = ["//visibility:public"],
     )
     module_ref = ":{}".format(name)
-    
-    # The name of the terraform target will be prefixed with the module name
-    # unless that module name shares the name of the package directory.
-    prefix = "{}_".format(name)
-    if name == paths.basename(native.package_name()):
-        prefix = ""
-    
     _terraform_executable(
-        name = "{}terraform".format(prefix),
+        name = "{}_terraform".format(name),
         module = module_ref,
         terraform = terraform_executable,
         tf_vars = tf_vars,
     )
+    # If your module name shares the name of the package directory, create
+    # an alias to Terraform without the module name prefix
+    if name == paths.basename(native.package_name()):
+        native.alias(name = "terraform",actual = ":{}_terraform".format(name))
