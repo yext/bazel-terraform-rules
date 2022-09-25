@@ -12,6 +12,7 @@ echo "$PREAMBLE$INSTALLATION_CODE" > $SCRIPT_DIR/../test/WORKSPACE
 
 echo "== Generated WORKSPACE =="
 cat $SCRIPT_DIR/../test/WORKSPACE
+echo "===="
 
 pushd $SCRIPT_DIR/../test
 bazel build //...
