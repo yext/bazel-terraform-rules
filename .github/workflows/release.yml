@@ -38,7 +38,7 @@ jobs:
         id: tar
       - name: Test tar
         run: |
-          .github/workflows/release/scripts/local-release-test.sh "${{steps.tar.outputs.TAR_PATH}}" "${{steps.tar.outputs.SRC_SHA256}}""
+          .github/workflows/release/scripts/local-release-test.sh "${{steps.tar.outputs.TAR_PATH}}" "${{steps.tar.outputs.SRC_SHA256}}"
       - name: "Build Changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v3
