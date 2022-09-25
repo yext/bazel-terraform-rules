@@ -1,5 +1,6 @@
 load("@tf_modules//rules:module.bzl", _terraform_module = "terraform_module")
 load("@tf_modules//rules:terraform.bzl", _terraform_executable = "terraform_executable")
+load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def terraform_module(
     name,
@@ -23,8 +24,15 @@ def terraform_module(
         visibility = ["//visibility:public"],
     )
     module_ref = ":{}".format(name)
+    
+    # The name of the terraform target will be prefixed with the module name
+    # unless that module name shares the name of the package directory.
+    prefix = "{}_".format(name)
+    if name == paths.basename(native.package_name()):
+        prefix = ""
+    
     _terraform_executable(
-        name = "terraform",
+        name = "{}terraform".format(prefix),
         module = module_ref,
         terraform = terraform_executable,
         tf_vars = tf_vars,
