@@ -63,7 +63,7 @@ jobs:
       - name: Installation instructions
         id: installation
         run: |
-          echo src/.github/workflows/release/scripts/installation-code.sh "https://github.com/theothertomelliott/bazel-terraform-rules/releases/download/${{steps.tag_version.outputs.new_tag}}/bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz" ${{steps.tar.outputs.SRC_SHA256}} > instructions.txt
+          src/.github/workflows/release/scripts/installation-code.sh "https://github.com/theothertomelliott/bazel-terraform-rules/releases/download/${{steps.tag_version.outputs.new_tag}}/bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz" ${{steps.tar.outputs.SRC_SHA256}} > instructions.txt
       - name: "Read Load instructions into variable"
         id: instructions
         uses: andstor/file-reader-action@v1
