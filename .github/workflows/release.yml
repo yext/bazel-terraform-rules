@@ -63,7 +63,7 @@ jobs:
       - name: Installation instructions
         id: installation
         run: |
-          echo "::set-output name=INSTALLATION_INSTRUCTIONS::$(src/.github/workflows/release/scripts/installation-code "https://github.com/theothertomelliott/bazel-terraform-rules/releases/download/${{steps.tag_version.outputs.new_tag}}/bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz" ${{steps.tar.outputs.SRC_SHA256}})"
+          echo "::set-output name=INSTALLATION_INSTRUCTIONS::$(src/.github/workflows/release/scripts/installation-code.sh "https://github.com/theothertomelliott/bazel-terraform-rules/releases/download/${{steps.tag_version.outputs.new_tag}}/bazel-terraform-rules-${{steps.tag_version.outputs.new_tag}}.tar.gz" ${{steps.tar.outputs.SRC_SHA256}})"
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.14
         with:
