@@ -10,6 +10,9 @@ PREAMBLE=$'workspace(name = "tf_modules_example")\n\n'
 
 echo "$PREAMBLE$INSTALLATION_CODE" > $SCRIPT_DIR/../test/WORKSPACE
 
+echo "== Generated WORKSPACE =="
+cat $SCRIPT_DIR/../test/WORKSPACE
+
 pushd $SCRIPT_DIR/../test
 bazel build //...
 popd
