@@ -6,6 +6,7 @@ terraform_module(
     module_deps = [
         "//modules/constants",
         "//modules/transitive",
+        "//modules/transitive_relative",
         "//modules/alternatepath",
     ],
     terraform_executable = "@terraform_toolchain-0.12.24//:terraform_executable",

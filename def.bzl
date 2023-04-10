@@ -12,6 +12,7 @@ def terraform_module(
     provider_binaries=[], 
     provider_versions={}, 
     terraform_executable=Label("@terraform_toolchain//:terraform_executable"),
+    absolute_module_source_paths = True,
     ):
     _terraform_module(
         name = name,
@@ -22,6 +23,7 @@ def terraform_module(
         provider_binaries = provider_binaries,
         provider_versions = provider_versions,
         visibility = ["//visibility:public"],
+        absolute_module_source_paths = absolute_module_source_paths,
     )
     module_ref = ":{}".format(name)
     _terraform_executable(

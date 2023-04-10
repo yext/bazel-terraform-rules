@@ -1,5 +1,5 @@
 module "constants" {
-  source = "./modules/constants"
+  source = "../constants"
 }
 
 output "test_constant" {
@@ -7,7 +7,7 @@ output "test_constant" {
 }
 
 module "transitive" {
-  source = "./modules/transitive"
+  source = "../transitive"
 }
 
 output "nested_directories_constant" {
@@ -23,7 +23,7 @@ output "nested_non_tf_constant_flattened" {
 }
 
 module "transitive_relative" {
-  source = "./modules/transitive_relative"
+  source = "../transitive_relative"
 }
 
 output "nested_relative_directories_constant" {
@@ -31,7 +31,7 @@ output "nested_relative_directories_constant" {
 }
 
 module "alternate_path" {
-  source = "./alternate/module/path"
+  source = "../../alternate/module/path"
 }
 
 output "alternate_path_constant" {
