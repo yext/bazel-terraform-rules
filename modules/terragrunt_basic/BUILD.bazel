@@ -1,0 +1,11 @@
+
+load("@tf_modules//:def.bzl", "terragrunt_module")
+
+terragrunt_module(
+    name = "terragrunt_basic",
+    srcs = ["terragrunt.hcl"],
+    absolute_module_source_paths = False,
+    module_deps = [
+        "//modules/terragrunt_basic/source"
+    ]
+)
