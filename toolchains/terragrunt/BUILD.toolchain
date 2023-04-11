@@ -1,0 +1,10 @@
+load("@tf_modules//toolchains/terragrunt:toolchain.bzl", "declare_terragrunt_toolchains")
+
+package(default_visibility = ["//visibility:public"])
+
+declare_terragrunt_toolchains(
+    version = "{version}",
+    dependencies = {dependencies},
+)
+
+exports_files(["terragrunt_executable"])

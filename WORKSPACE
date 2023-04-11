@@ -55,3 +55,7 @@ register_terraform_toolchain("1.2.9", default=True)
 register_terraform_toolchain("1.2.2")
 register_terraform_toolchain("0.12.24")
 register_terraform_toolchain("0.12.23")
+
+load("@tf_modules//toolchains/terragrunt:toolchain.bzl", "register_terragrunt_toolchain")
+
+register_terragrunt_toolchain("v0.45.2", default=True)
