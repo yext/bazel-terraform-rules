@@ -15,6 +15,8 @@ def terraform_module(
     terraform_executable=Label("@terraform_toolchain//:terraform_executable"),
     absolute_module_source_paths = True,
     ):
+    if name == "terraform":
+        fail("The name 'terraform' is reserved for the Terraform executable. Please use a different name for your module.")
     _terraform_module(
         name = name,
         module_path = module_path,
@@ -51,6 +53,8 @@ def terragrunt_module(
     terragrunt_executable=Label("@terragrunt_toolchain//:terragrunt_executable"),
     absolute_module_source_paths = True,
     ):
+    if name == "terragrunt":
+        fail("The name 'terragrunt' is reserved for the Terragrunt executable. Please use a different name for your module.")
     _terraform_module(
         name = name,
         module_path = module_path,
