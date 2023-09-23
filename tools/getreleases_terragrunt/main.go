@@ -113,7 +113,7 @@ func getAllTerragruntReleases() []Release {
 	var (
 		out []Release
 	)
-	resp, err := http.Get("https://api.github.com/repos/gruntwork-io/terragrunt/releases")
+	resp, err := http.Get("https://api.github.com/repos/gruntwork-io/terragrunt/releases?per_page=100")
 	if err != nil {
 		log.Fatalln(err)
 	}
