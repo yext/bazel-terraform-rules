@@ -6,6 +6,486 @@
 # bazel run //tools/getreleases_terragrunt
 
 VERSIONS = {
+  "v0.53.2": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.2/terragrunt_darwin_amd64",
+	  "sha": "f59fcc2090681320fe96f3a6fe44868f4de965d066c0a9f49dd0e0503cb4137e",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.2/terragrunt_darwin_arm64",
+	  "sha": "bef307b156ccfb9a6fb9e8ae147417b42d9420332d8df2ab5c47b45fc98bea48",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.2/terragrunt_linux_386",
+	  "sha": "6955df5f765840d0b4d93fef31ade3a8348381b022eac67b4583136d8d93471e",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.2/terragrunt_linux_amd64",
+	  "sha": "327006c9b099dd0ed98fc639bc50843cdc60430e6f700781085365a0b3b717f7",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.2/terragrunt_linux_arm64",
+	  "sha": "d8df901b324736cf44680d937e291fcf53113b023bb563f0e9286400edcd631b",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.2/terragrunt_windows_386.exe",
+	  "sha": "b7305140ea12a51259564dc17b5921fd3683e3138f438adc3eb845b3cca2194a",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.2/terragrunt_windows_amd64.exe",
+	  "sha": "e9bb7239b09531b292fdd2065bcd962f5e5f3b4e3f361d8caaed0f68cfc65aee",
+	},
+  },
+  "v0.53.1": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.1/terragrunt_darwin_amd64",
+	  "sha": "7565e1ed48e953508256e6c3d49a0a1c6c28c4e21268247300b66a2af57e9301",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.1/terragrunt_darwin_arm64",
+	  "sha": "2ead3be731157cda65d442661c998c6f040a34ace922aaa69da38626233f1dbb",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.1/terragrunt_linux_386",
+	  "sha": "43c29efa7a5449e0d66d881f371effe335589e962e9ffa9a2fc0ce0b79489156",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.1/terragrunt_linux_amd64",
+	  "sha": "a9c8e57ea7de6a9be389252ee1c702eae16d68bc341110f48f0fc6818c1a5cfd",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.1/terragrunt_linux_arm64",
+	  "sha": "1fcd61f48900f731527347e378f9b480505b447148582878fa158909f0f77e75",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.1/terragrunt_windows_386.exe",
+	  "sha": "0ac43f6c9d41c0285d35a523139dd8b42d1c840dbeb9c7b3c7a6914024a60498",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.1/terragrunt_windows_amd64.exe",
+	  "sha": "2bd9dc2a419783c77e1ed0fe183f341fc5dc700b78fcf443c9d73e67f2ca6300",
+	},
+  },
+  "v0.53.0": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.0/terragrunt_darwin_amd64",
+	  "sha": "7f9697778c5006004e375c868187db9d2c2ccd764a64ce4a07f61e12e5e205a1",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.0/terragrunt_darwin_arm64",
+	  "sha": "0998be63ec443a3791bbf4000857264b87fcbf0af3454987cd271485438255ee",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.0/terragrunt_linux_386",
+	  "sha": "00874cb1475157af295b12d24da61476dd8cc9893356ae624ab345b699daa17b",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.0/terragrunt_linux_amd64",
+	  "sha": "a2cb2b867ce1523c40ebdd9434af18918ed87d0eb97b5c4d9a11c41b2a582f8c",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.0/terragrunt_linux_arm64",
+	  "sha": "27dfbdf258f0a31ec0b50bbacfc972df0e13a041b9e982df7064d88574e84774",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.0/terragrunt_windows_386.exe",
+	  "sha": "a65c4fab2c5b32f66589a42b36e233106430b95b0bd755333c8745b1ee653784",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.53.0/terragrunt_windows_amd64.exe",
+	  "sha": "dcc9c7d7db7848ad8b91720537d37adeb01bf1ee359fe7469d936ee94798849c",
+	},
+  },
+  "v0.52.7": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.7/terragrunt_darwin_amd64",
+	  "sha": "820798210b2a722aa39111c5be4de385fce03f6505cc43297e64141fb6bc763f",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.7/terragrunt_darwin_arm64",
+	  "sha": "37f7f2d220795fe6cce5fe0ffd7bd249ea3005e7a5c449292e17f912ef8384f2",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.7/terragrunt_linux_386",
+	  "sha": "96789cdf299242cfdab34f6df35fab3dba9d22e6f436aea14cf9ee250a2b1544",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.7/terragrunt_linux_amd64",
+	  "sha": "f7592002b6aded0434692095be4074c0d9e0d0aee8b967b4acd7c28cd4ee1a67",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.7/terragrunt_linux_arm64",
+	  "sha": "4ca038b6f5caab90828a227d0dfd70ce8c44827a796e60bb19459341d5ad01ac",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.7/terragrunt_windows_386.exe",
+	  "sha": "78de2716051f9da45a079cce4124c9ed1a11ee673441101c63b5d8f2fdeec776",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.7/terragrunt_windows_amd64.exe",
+	  "sha": "d9f092eb99f60273d82ae3e8427f0bd5b1195c8e054f69707934a459ed4ed78d",
+	},
+  },
+  "v0.52.6": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.6/terragrunt_darwin_amd64",
+	  "sha": "78f6c4eccfa9564a2c06c3e0260f16cb2d0bb805c1df9b60d16c746513713768",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.6/terragrunt_darwin_arm64",
+	  "sha": "e91219b8929a3570f0512037382c60f80739998582236e41680f528a9172c491",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.6/terragrunt_linux_386",
+	  "sha": "8b9b1b0147d10dcbd5bea4513aea41561573864c8e730382aa500f1956e9bbc1",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.6/terragrunt_linux_amd64",
+	  "sha": "06c1ef63f1e0750f39cdfe9344f18a82013facfeedf792e62e17a8cd20e7643f",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.6/terragrunt_linux_arm64",
+	  "sha": "b01378dd8986d3173761feb747d01197ae113528279f73cc306292b4bb961df6",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.6/terragrunt_windows_386.exe",
+	  "sha": "12c5f3c8bf2218957fb8b5df09afd90db3cc3346c994ee858495406bee38e28f",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.6/terragrunt_windows_amd64.exe",
+	  "sha": "06ea6fcfbbbea3c8f8fa0aadef7a084b5ab781c2eba50a4eacb9fe1889ef256d",
+	},
+  },
+  "v0.52.5": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.5/terragrunt_darwin_amd64",
+	  "sha": "76d33354e475b11c7cd234551a5fc98d4fd21ac1d9e279524c6cb661e1e1923e",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.5/terragrunt_darwin_arm64",
+	  "sha": "04ed0b4ed76c6e2e5e11417f6a8576d6c22377113760c4c47f55b685850a8e46",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.5/terragrunt_linux_386",
+	  "sha": "bbb40128ea8da07b0119636738d29ad39f698794c7b90240784eaec1d96becb3",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.5/terragrunt_linux_amd64",
+	  "sha": "c22755640122bddf78d3c7311e0e1d66fcdab8a7c1d1e876e3fca60edb5f1a21",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.5/terragrunt_linux_arm64",
+	  "sha": "0d635900d65b572b60dc629977ba4a8f87b513c9f6df554085ccf8519678bf86",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.5/terragrunt_windows_386.exe",
+	  "sha": "a2d7950a05590c4e925dfee3a554c2b4ae0ec8186d8ae747727834f9d53cab66",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.5/terragrunt_windows_amd64.exe",
+	  "sha": "27b8d079948e694e2244de292722526f52fa6b82f7483ebff6102364dcc037c3",
+	},
+  },
+  "v0.52.4": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.4/terragrunt_darwin_amd64",
+	  "sha": "334a8a976debadc45cc888a644710faa513fc4c17796c126357050ae6bda9d6d",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.4/terragrunt_darwin_arm64",
+	  "sha": "fd228b02632cb0329404b424fff9b2de9a9f474d2bff3cedec4c20cfe7d64ddb",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.4/terragrunt_linux_386",
+	  "sha": "3154642ffeb30a60086b0ede5b7acbf5002f29bf618dd21bda997e3fdf113f4d",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.4/terragrunt_linux_amd64",
+	  "sha": "5d2643c367ed3f03b20847a7ae32709c50e7adaa89246f3def76cda9054dcef2",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.4/terragrunt_linux_arm64",
+	  "sha": "1b2599bbd4f95676b534aee17eb0e24ee87740820403bd220089ac7df75bf8a1",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.4/terragrunt_windows_386.exe",
+	  "sha": "7cdf419f001ce8cb12f986ae1b855d796babc906c3d4eb4656f61b3b4194c056",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.4/terragrunt_windows_amd64.exe",
+	  "sha": "5cd2967442502678e85495aa38a6c510fbfb272236abee1e256da4cd140d2d25",
+	},
+  },
+  "v0.52.3": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.3/terragrunt_darwin_amd64",
+	  "sha": "25ba45f9f5502a2496133daea348987f44565590e2eee84dbdfe33466ed82937",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.3/terragrunt_darwin_arm64",
+	  "sha": "1e5a915996df8297ca116971426f76af32190cb4064cab10613f614dc4e09f87",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.3/terragrunt_linux_386",
+	  "sha": "cd3f85282f6b5b258a7d170e9a0b4d63eb5d1b57a8b873ef295624ceb2138cce",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.3/terragrunt_linux_amd64",
+	  "sha": "f86dfa397647e508146629c1e3981e0b4a9c588e4002d829f71823c0aa118ca0",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.3/terragrunt_linux_arm64",
+	  "sha": "ccb22ec30dba2a5df8cc48e0539c741d9f984a8e2101f7ec02747ab8b6b8b960",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.3/terragrunt_windows_386.exe",
+	  "sha": "8996cb4fbbf128e0172e8299cbb8223a46275328d73eb8afc902c24fc179a347",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.3/terragrunt_windows_amd64.exe",
+	  "sha": "99a1ae467b228927c77f2a2f5dd843aecdb84b732d8c36e1dc45f5f9500914b5",
+	},
+  },
+  "v0.52.2": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.2/terragrunt_darwin_amd64",
+	  "sha": "cd8f0035aa01797dec32400803ca16d6cc3209a48e54980bce24e20bf0db907a",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.2/terragrunt_darwin_arm64",
+	  "sha": "15440aa1292af03bb0c82cf8c7b5eb5898b93a390ca155f488096f140bc31320",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.2/terragrunt_linux_386",
+	  "sha": "c220fb18eeb82e16c4ee6ce0fc47a9be21f5b34a3e8816380f19e83d2d5a737f",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.2/terragrunt_linux_amd64",
+	  "sha": "49a9232e3b4e8479c782d94d66175ea75acc23f1c38b13408ff98f7888abe28d",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.2/terragrunt_linux_arm64",
+	  "sha": "cc2f9b67c071ebe08bd68bb34788504db306721e776565062dfae06312af3c70",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.2/terragrunt_windows_386.exe",
+	  "sha": "ded6b77d00a4567ae4405966c0c71aa0b9f5f0b0f4fca210a633ec2ceaeea826",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.2/terragrunt_windows_amd64.exe",
+	  "sha": "ffa8e14aa32cbbe6950543212376e6e48b14c2553772e45bd4e7d29260f86c70",
+	},
+  },
+  "v0.52.1": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.1/terragrunt_darwin_amd64",
+	  "sha": "3620d10a4f9790b02ecd4950c19afb632f798bb7819528311e9cbba682216011",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.1/terragrunt_darwin_arm64",
+	  "sha": "bebea56eb55f557ee3fd20c81e30901afb1cbca7edeae2fb3a804b3b0c01045a",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.1/terragrunt_linux_386",
+	  "sha": "5bf6b42f090b16e9af3a97354edc942d8d3c554700b0a267c1c8d045c40aafdd",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.1/terragrunt_linux_amd64",
+	  "sha": "d86c1511963cfd8444164e4b3ee0f3982f40ab733be71f6a6c3f772e2ce7238b",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.1/terragrunt_linux_arm64",
+	  "sha": "1915f614f3cbf711682ed3ab5000f44d740a51d9f791adf1f311848796230fbd",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.1/terragrunt_windows_386.exe",
+	  "sha": "bd04af35ed4643cc4e2b9a36dd78190b5ccf0d3bd6c3eabb99611a82f2a7d681",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.1/terragrunt_windows_amd64.exe",
+	  "sha": "acf93ebdc5c4edfdd6c1ace71588c20d6bbb67271a152b573920f172cd953aa5",
+	},
+  },
+  "v0.52.0": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.0/terragrunt_darwin_amd64",
+	  "sha": "f4c372751161fe40d1ed33e6ff7003737fdfced4452c76ac51cba06efbeefc92",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.0/terragrunt_darwin_arm64",
+	  "sha": "066c673fddf2fc29ff5ad7fdd5ed54a7b5ae00d163e5b952cb05db69e11c887d",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.0/terragrunt_linux_386",
+	  "sha": "8fe1dd0bdb827948f82ea96d6554372e2a78426ebc0f24c7ebc23d82281f2dc6",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.0/terragrunt_linux_amd64",
+	  "sha": "fb7c5d93805e0548761038ce2bfa441cbaa5679c65597c19ff3cc006de1f742c",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.0/terragrunt_linux_arm64",
+	  "sha": "32a2079a678485928c46be19e755f459c918168ebfd1acb2432171dd9e4cf837",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.0/terragrunt_windows_386.exe",
+	  "sha": "f31257c04e61e3d9bf593d327013b870b8a024b25c977f66ff8c7471470f1a81",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.52.0/terragrunt_windows_amd64.exe",
+	  "sha": "2f0f8a699ef6bf4d53756b9a24e0349a9ef35433fab2a8d882b797b4179b4c46",
+	},
+  },
+  "v0.51.9": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.9/terragrunt_darwin_amd64",
+	  "sha": "4df8ae1c4c5e220a9b6a703941b133e831dc8321dc661afd5de22ec49ed85e5c",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.9/terragrunt_darwin_arm64",
+	  "sha": "be263efa35591c7c7373662df5a52fd248291304b2cfe51fa781d4f714a44548",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.9/terragrunt_linux_386",
+	  "sha": "90020f5d9235e9259c7ff8132b8d34493a9618ea083d2782575a40c0a2c25b63",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.9/terragrunt_linux_amd64",
+	  "sha": "96f2d4505d3731830154cb9f8cee89b0e037e3638cbc38806f2660bebfc708a5",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.9/terragrunt_linux_arm64",
+	  "sha": "9a1b766c4bb0a3566a3b04447403dd1b6b83eff6c742639b8d59122eaf3255b1",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.9/terragrunt_windows_386.exe",
+	  "sha": "9cc49f68d71abac48425ae636525dedc7e6e10e6b61ecbfc28d18c5ca96bea2a",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.9/terragrunt_windows_amd64.exe",
+	  "sha": "b9184713c23a5a176557618c16c30a716f63f5524fe59a2dac9e30d6c2beda87",
+	},
+  },
+  "v0.51.8": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.8/terragrunt_darwin_amd64",
+	  "sha": "835fdba1e5d92619c7e80345e29d3f2b73a0ed075351d5e179a91c9a73a5c80f",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.8/terragrunt_darwin_arm64",
+	  "sha": "21acad48434ad071b39cb354c72673fd02e9f81087b90c0bddc119de7902619e",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.8/terragrunt_linux_386",
+	  "sha": "cdbd9cbe4c2fd85320a04db1def816978f84df4e4d1be93987a9997273812226",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.8/terragrunt_linux_amd64",
+	  "sha": "8ad9f094d897025d648202cd546fa5fe5a0a3b20e3415dc05d13aa98baa71641",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.8/terragrunt_linux_arm64",
+	  "sha": "e932075fb9f5dfe36454020641e87f336a83037df0c1e2525b2b5399f64932fe",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.8/terragrunt_windows_386.exe",
+	  "sha": "470b9708b7baf573b685c8f2121de560fc62f2107bb900d92ea7571930281ed6",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.8/terragrunt_windows_amd64.exe",
+	  "sha": "f85d8b462b947cc0b022a43856b36c28ad802883a09b52594b2feb8af5c42050",
+	},
+  },
+  "v0.51.7": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.7/terragrunt_darwin_amd64",
+	  "sha": "96672487f716de0e4d4a39d7391c0a5e79d37e249d3447289d1bb27310876a2c",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.7/terragrunt_darwin_arm64",
+	  "sha": "338bf0761a151fd1397bf7c3b381fe5e57eaba9719af65c7312ebb5a1ac65469",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.7/terragrunt_linux_386",
+	  "sha": "4993485df3a49ceb0521f43b5af7f53a215bde7ef2d480a50522caf653f5a779",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.7/terragrunt_linux_amd64",
+	  "sha": "e2cd5235650f6a68c7d9ccb8c4cb007b120d536922dd0982474b7379e86d2a87",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.7/terragrunt_linux_arm64",
+	  "sha": "f46d697172499c21a204b769b78696af4c6c6798d4c065753084d43cfedcb687",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.7/terragrunt_windows_386.exe",
+	  "sha": "0ee455b832b424602fec9a610ee2282d694e7c7d4a5a81331427c0cb560a3b6b",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.7/terragrunt_windows_amd64.exe",
+	  "sha": "dfaacbfe5bd37d8517c1c0a69704546884ec5eb990fc996c7d6c154e67c9ac33",
+	},
+  },
+  "v0.51.6": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.6/terragrunt_darwin_amd64",
+	  "sha": "b685d05adee54d5712c5a511234b8ad06d5edecc81f500cab781fc3ab473bc57",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.6/terragrunt_darwin_arm64",
+	  "sha": "20ced6b7ddb5e296887414a00946a9a7ed0498f2be890cd5ecae7c976b9ccccf",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.6/terragrunt_linux_386",
+	  "sha": "4397def5d5d33f95324382b478ba2d60bafb777ff29813bcf8707fcffafdc781",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.6/terragrunt_linux_amd64",
+	  "sha": "92db373782b695a661b685d5ac614f93a2ba9d762329e5bf8314316852871ff0",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.6/terragrunt_linux_arm64",
+	  "sha": "758210502e83982188a71fd99f3a08991e4b0723927fdf06df77a0c65c5bdb51",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.6/terragrunt_windows_386.exe",
+	  "sha": "bbdc6f979e2f415cce8741afabf11d4cf5764545637f1a83c14ab0153adc9e4e",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.6/terragrunt_windows_amd64.exe",
+	  "sha": "9fd0021068726d114ec75c78e1ba1f6c05a5d2a20b38c9644a30de57b3c0fb72",
+	},
+  },
+  "v0.51.5": {
+	"darwin_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.5/terragrunt_darwin_amd64",
+	  "sha": "a55e4a48822d70a5cf02e35bd2dc50cf8da743ca29a1f46eeeaa07df73166632",
+	},
+	"darwin_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.5/terragrunt_darwin_arm64",
+	  "sha": "742f0e57ccbdfd44b12ce80209897dcc491a1f02feeae8fab59b8c961f3ff19d",
+	},
+	"linux_386": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.5/terragrunt_linux_386",
+	  "sha": "ea492ed0650b9a00a41062ec0e3c7f47e5a9f7276f273e72b640ad99a33c85ea",
+	},
+	"linux_amd64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.5/terragrunt_linux_amd64",
+	  "sha": "fad5f2eb098dc3da42e8a0c2f65f88ff8cd55138a0652cb525c0059f25e706df",
+	},
+	"linux_arm64": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.5/terragrunt_linux_arm64",
+	  "sha": "4961e70ca7c99e147ddac66a737fe52680e92cdf9ada8a69cc5a551004423f8e",
+	},
+	"windows_386.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.5/terragrunt_windows_386.exe",
+	  "sha": "f338ef469233ff28ff17f2f2a234815d323add03f02d3bf166d1fe49f2e5119a",
+	},
+	"windows_amd64.exe": {
+	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.5/terragrunt_windows_amd64.exe",
+	  "sha": "acbe473b9770c1a7e318afa391ebecddf2fe920e8984b2e9215c26b131d107d4",
+	},
+  },
   "v0.51.4": {
 	"darwin_amd64": {
 	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.51.4/terragrunt_darwin_amd64",
@@ -2524,486 +3004,6 @@ VERSIONS = {
 	"windows_amd64.exe": {
 	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.39.0/terragrunt_windows_amd64.exe",
 	  "sha": "15df7c1c7fdfe0d34168bb14172d8cb84adcf6929b23757268fb736dc380328d",
-	},
-  },
-  "v0.38.12": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.12/terragrunt_darwin_amd64",
-	  "sha": "8fd8ae60091f910d1c599ab0f0b89905f99b618a346783a58b4fd206197d61cb",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.12/terragrunt_darwin_arm64",
-	  "sha": "afcf25f63651afb766622b48f945a8c66e17689f0f68ae4d77aec1a06f3fad06",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.12/terragrunt_linux_386",
-	  "sha": "a394408a03fa93f46faaed3bf2c6b46b6cf982a5824cbb0e7b5f90395859ece8",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.12/terragrunt_linux_amd64",
-	  "sha": "7545d60ef9861526456d086a808e08055687ffbe18d1ff6be95dba8b1797761a",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.12/terragrunt_linux_arm64",
-	  "sha": "7dc5d7d96d20985f00493fcc020b1677d3e257b8655bfeb41f1b36426d841989",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.12/terragrunt_windows_386.exe",
-	  "sha": "37e5bc94645db25aa9211471a2fa251b5454627357a794cdd1f687c19b1f7c14",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.12/terragrunt_windows_amd64.exe",
-	  "sha": "81466819216d9954b17c6b411e2de363f84546e755938c61a4b5cf2beae8d639",
-	},
-  },
-  "v0.38.11": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.11/terragrunt_darwin_amd64",
-	  "sha": "25f07fbe9d0de22fa631fa12a04286b2e5a49a3d41df2283e31afa9cf7d89664",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.11/terragrunt_darwin_arm64",
-	  "sha": "228d64082ed924eb063533bcc4b985d2d1d934048e24a36bb067399b492179c3",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.11/terragrunt_linux_386",
-	  "sha": "31ac20152dae831a9c6c2704959c338a30202dce04e5d12cfe2df3af6eda877d",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.11/terragrunt_linux_amd64",
-	  "sha": "6178a35045b041e527a12765fbe3280906d046d5c1c49d6d79e2ee7786df4fb6",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.11/terragrunt_linux_arm64",
-	  "sha": "b26cee9ea993f707c41b6339cd2389ce6046a27e668c01b4285fd08943a0ece8",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.11/terragrunt_windows_386.exe",
-	  "sha": "cd4c54d3b8e1c48a83acbaf97e765fc6a63fd70b77081a3b9fb634b6c9233489",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.11/terragrunt_windows_amd64.exe",
-	  "sha": "bcc79ad384947aeabb3a701b8f61e1a2b22f9f96f0771e3bca9cf67644241af8",
-	},
-  },
-  "v0.38.10": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.10/terragrunt_darwin_amd64",
-	  "sha": "e8c82e945997ff4721318aa518decc39c35245f4585ad47b1f079d3067cd6d49",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.10/terragrunt_darwin_arm64",
-	  "sha": "5f29dc846ee1c3edec72df3770faee84bc4b5aed8d678688af4d397b7b390af9",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.10/terragrunt_linux_386",
-	  "sha": "f21ac1c14c4f121e91be94773e15271b539045c450f10070235644e1052ff4b1",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.10/terragrunt_linux_amd64",
-	  "sha": "83d123f6e13b96f43cd438dd35a9d500d640e7b563af1c201bbafb81b6057085",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.10/terragrunt_linux_arm64",
-	  "sha": "ceadd02c143339d2d97aa24aeef9bc5b8f69109d6e0d867a144fe7ee604cea03",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.10/terragrunt_windows_386.exe",
-	  "sha": "2e8ef6baae8eb8e15aeefd7cbf6ba50ec65e2197ae65ca1477b0e573fe2855af",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.10/terragrunt_windows_amd64.exe",
-	  "sha": "22923a4e74c188672e95658b7c84a6117c1655c0859f80b072da63335b1cf3ce",
-	},
-  },
-  "v0.38.9": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.9/terragrunt_darwin_amd64",
-	  "sha": "44f8449ecdc800e42d9d436072dcb724a004190b61a3819278add80614cc8fc4",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.9/terragrunt_darwin_arm64",
-	  "sha": "15b8d5c06a032754d2af66557b4c71a57fb4563b585f7337448548194870088b",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.9/terragrunt_linux_386",
-	  "sha": "f5b6a8b246aeee19d57ba944d1fd12f949aef5cd2e809726d84d8c88a98c18ce",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.9/terragrunt_linux_amd64",
-	  "sha": "c5c3fc6bc42b21e5f229d307f9b9493b9167a19cff423d6cc1e980658cff63b5",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.9/terragrunt_linux_arm64",
-	  "sha": "9a9c0a6790ff58660fbdf17269448aab4de5c4f759f66cb6051ab34011a57535",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.9/terragrunt_windows_386.exe",
-	  "sha": "1c75dd3fbd75d96f004d3cc71025807b1076fd5a53e13e65dafb95a5f63129c5",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.9/terragrunt_windows_amd64.exe",
-	  "sha": "a50bdd80ffc0ab84ead421fe832eacf2c9007f99a0964b235e8154f7e3db8892",
-	},
-  },
-  "v0.38.8": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.8/terragrunt_darwin_amd64",
-	  "sha": "ef19c8ca2db6251124a054d268aaf490015478e2ade1688f40edd085ca73cb27",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.8/terragrunt_darwin_arm64",
-	  "sha": "6b888f862d011b8a39a9bbf335b0f42981d8ac2c4ae3c4f836304a98cc682b53",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.8/terragrunt_linux_386",
-	  "sha": "1978becd98c57cd443250add8c4098c2877d40a9c7d6cef72eeab1674341065f",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.8/terragrunt_linux_amd64",
-	  "sha": "f1a5b1355c4a9ea807131f27b44bfbfe04dc25a3c4cd353910a2e68e0d7efafd",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.8/terragrunt_linux_arm64",
-	  "sha": "443e22c90755dd7d40f7c954873f95ebaba5f44bcf30841382c05ce6b95acf5d",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.8/terragrunt_windows_386.exe",
-	  "sha": "c36b49795d0dc84dff8204bef7341b96651356cd6ab1bde2a4c554058ca15171",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.8/terragrunt_windows_amd64.exe",
-	  "sha": "0df54857445c8593d3827a9713ee3ffb92cefc10f913156a7d69d7834fdf2574",
-	},
-  },
-  "v0.38.7": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.7/terragrunt_darwin_amd64",
-	  "sha": "935f25276e34de8d8c99ff6f6fbbb954a7669412e4fa1f826c02aa03d2df27ee",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.7/terragrunt_darwin_arm64",
-	  "sha": "f976d92293d2357afc505a9eaa1669803edd7259efb159e120b47df4126c1af7",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.7/terragrunt_linux_386",
-	  "sha": "f3e58f98868c29386dd8e5dce58e5fdbd39a5bb02eff83d639117ce0d18dea2a",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.7/terragrunt_linux_amd64",
-	  "sha": "c3dd39836d968c9299647d9b950ba9110922c6a910c60d8dcc30e8549333aac1",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.7/terragrunt_linux_arm64",
-	  "sha": "3b04996b359e74095d4e67afb6b9b29dd6ee88f475b38d1d17e08ace80cf26cc",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.7/terragrunt_windows_386.exe",
-	  "sha": "e369a14b6b15dfe113c6951a4ac74e4e4448389b8245502d2c599cf1724494e8",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.7/terragrunt_windows_amd64.exe",
-	  "sha": "f780d1bb98cab19fa21d149865eec287d8a7608cd4df3332bd72e27c42152dc7",
-	},
-  },
-  "v0.38.6": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.6/terragrunt_darwin_amd64",
-	  "sha": "60004a23992547041a5019a94783de3ed150ce060033743f0f99467e3c0a54b9",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.6/terragrunt_darwin_arm64",
-	  "sha": "39f1d4b20536ba128601ee71b38528cf9ef8eeac917a9c0c9438db64822cca82",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.6/terragrunt_linux_386",
-	  "sha": "8fc1807854ff89c4a2f42e42232c6c9d9ea70fe7370d437d2f5af5f1fdd2cac8",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.6/terragrunt_linux_amd64",
-	  "sha": "2fef737ade1393acd744dcacbf4a6191374499ca0499b85c795d7a4abd2c1483",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.6/terragrunt_linux_arm64",
-	  "sha": "56955978d78d1b5fa6c61ebf31a54a9512caea162f196af7f2b14bc2d9f26759",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.6/terragrunt_windows_386.exe",
-	  "sha": "86ad2e49f9e6d8684bd3fd2611ba43bd93a31a141690d3fe436f911ed8ed030a",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.6/terragrunt_windows_amd64.exe",
-	  "sha": "70b0fa46ba50675c6fc4e74657e96908efd2371d6ea9e411eaeaf3e8c748f696",
-	},
-  },
-  "v0.38.5": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.5/terragrunt_darwin_amd64",
-	  "sha": "7a2603bde27f7e344c4ae16d4e5d2d93497820a1d637094f5a6e35e39c05c793",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.5/terragrunt_darwin_arm64",
-	  "sha": "7acb81deb8bfa1b0b89d55893bcb366f8cc0ec71ff4c090607b1707114f89c33",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.5/terragrunt_linux_386",
-	  "sha": "20916d9121fe5529f7c89ae0211c49cfe3f1761a2e5e2bd0b1d25e01b5f66408",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.5/terragrunt_linux_amd64",
-	  "sha": "5819f5a0164b986a230cdab6599b2021f3421c13e9233d0f8cfdfd3153e427d7",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.5/terragrunt_linux_arm64",
-	  "sha": "1b38bd8a8c9b148cf541194f97fd95ce74a3d58044b628de2a25b77a8f625242",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.5/terragrunt_windows_386.exe",
-	  "sha": "37cada1721554e47371b48abb5a2a02d482980187976fbf9b1f704f4de50a2bf",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.5/terragrunt_windows_amd64.exe",
-	  "sha": "163dd4f923937d1e08bdc5bc007c76a70abe051c8da9865a82893ec03200e916",
-	},
-  },
-  "v0.38.4": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_darwin_amd64",
-	  "sha": "0b1a306c4b3323b38a4682b2cf3b0a8c72aed5a73ddeecfa6382a5afa0d83334",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_darwin_arm64",
-	  "sha": "2f84a93c5a86e3d8500fe77a7c1648f3e957fa497ce99425aad6049f919fc41a",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_linux_386",
-	  "sha": "a35626b9f5a8a9c63b68c2f46d601d5504b6857517fa84aceb9f431d54a4bf8f",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_linux_amd64",
-	  "sha": "dfb61761ac47cecbd9c885db673486c08f5ec45408c4b2b604584299013d5479",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_linux_arm64",
-	  "sha": "807bd0e7209558ff34bae61d47d60f4b019b8539302c41daa391afe8578e5be3",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_windows_386.exe",
-	  "sha": "77db53d02cf01067e1b0a9a339904e0dabf357eb1f5123ab9b80e8a7ec1bfe45",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_windows_amd64.exe",
-	  "sha": "f61fb94e0c9b5f598de8f183e6a16207cbacfeb0fe41d1fecb273fe85f3e0e52",
-	},
-  },
-  "v0.38.3": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.3/terragrunt_darwin_amd64",
-	  "sha": "59fc71875f82f2d1e3b4295aa285c4351ddfb95a2280520af43536f2ed64164f",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.3/terragrunt_darwin_arm64",
-	  "sha": "13e83b445394023056591e2fa870cf7cd95962dcb38b3645174d17e2fec341f7",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.3/terragrunt_linux_386",
-	  "sha": "326c0ad0b0102ac8289c93efde04409fd0af572816372e7cc1487d7f8a42f0d8",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.3/terragrunt_linux_amd64",
-	  "sha": "1db3f689e059ebc9a57db36d42279c2516649108248844aca73d3f873bfa80f2",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.3/terragrunt_linux_arm64",
-	  "sha": "80f3cf78961a79a1acd9b05f2c4de36088c9e3467c15865225e20cebd21896c1",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.3/terragrunt_windows_386.exe",
-	  "sha": "e52c72864aeec4ba4d5722a22f123dc3501a0b9a720679188d9d4ee47d9138b7",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.3/terragrunt_windows_amd64.exe",
-	  "sha": "dc460880cd4fb2191565227c5a1f6788202df567238082e82c663e4a613ad676",
-	},
-  },
-  "v0.38.2": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.2/terragrunt_darwin_amd64",
-	  "sha": "3c2571f5ab44c364019c41fb4684ef3c8e27f79f3bf850237645095719d02ccd",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.2/terragrunt_darwin_arm64",
-	  "sha": "adf9528d7b0a9e93470d8c1c818e7c6d772c5db35eb1c7e3db5b1a766a69ef36",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.2/terragrunt_linux_386",
-	  "sha": "c3600c831a07cca8bd762dc4e1610ccd3feb9305dbc1ee25f6523bbda1e71430",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.2/terragrunt_linux_amd64",
-	  "sha": "717ee87521b91f2200a3d375d89e0a36febe78cf82f9292cc6d16ce6fc7871eb",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.2/terragrunt_linux_arm64",
-	  "sha": "a8b3c9dec60b4039129353abafde886b1aa4e777e81782aeb914be0490d7a238",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.2/terragrunt_windows_386.exe",
-	  "sha": "354a8b830b0e82669251cf14ca7d6519e7a036b680f2bd6c515f7a0a8a7cf91d",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.2/terragrunt_windows_amd64.exe",
-	  "sha": "ede484d9e9746b40703ad4c9601b0f0f04af4ffafdfeb043c14709c4d5cebaca",
-	},
-  },
-  "v0.38.1": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.1/terragrunt_darwin_amd64",
-	  "sha": "4dd60b46f4962525aef010a4554e6c9b72db0c5fd571eb243247aa3f09a8c098",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.1/terragrunt_darwin_arm64",
-	  "sha": "c4dcafe92ff929b9797d2f4af308331e9e04b40bf025ee223595f45262904415",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.1/terragrunt_linux_386",
-	  "sha": "ff97b182d3db8670b7efd0f6b50c3961cf4616a910c9dc843e92b6049f70d1b2",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.1/terragrunt_linux_amd64",
-	  "sha": "260929cdf386864d1545a0c8614b7f6b56dfb8613cef2b8a29e5bcc4d8a7b311",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.1/terragrunt_linux_arm64",
-	  "sha": "6aaf369b169c4ef76d042684c7fcd2071684be5787168ec2f00a9b786571ec2c",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.1/terragrunt_windows_386.exe",
-	  "sha": "ae515466b7241406bd1584d027a8ad33255453ea8b64ad26765d9e6b2b4f07c0",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.1/terragrunt_windows_amd64.exe",
-	  "sha": "eb7ce0b2cdb8e8f7b497e676f64eec27df8d1045218457e9f46060f1a7b11c31",
-	},
-  },
-  "v0.38.0": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.0/terragrunt_darwin_amd64",
-	  "sha": "895b52d8ab04178a114cd05e2e7141dfbe5a981048800910014673dce2d5279b",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.0/terragrunt_darwin_arm64",
-	  "sha": "0e26a0c8c477d75fcd21805809560a409270c613b947487a52cb7e1129840c5e",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.0/terragrunt_linux_386",
-	  "sha": "0e74166166d4a038bad46d82ecac12a1afb3505326f9a3c144e8866ee830c3db",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.0/terragrunt_linux_amd64",
-	  "sha": "479df162582787e596ab218f875afb413b77914a24a5fa8f9e37eb96963cb49e",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.0/terragrunt_linux_arm64",
-	  "sha": "8431850e46fc5b684f6fd0548d17fb62b0b680ed863ebc83c3c3ae58f8736c9e",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.0/terragrunt_windows_386.exe",
-	  "sha": "55e6057071e5c75b2fdee8bab4c8966ee98e3a1c22c0e93c3257454ec723ee40",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.0/terragrunt_windows_amd64.exe",
-	  "sha": "8127f0815cea353d9fb86e428ba23603485cec7c367029e2e8df8722dcebf8d9",
-	},
-  },
-  "v0.37.4": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.4/terragrunt_darwin_amd64",
-	  "sha": "4711e09d47a51a212fe7908a4608d487a48cab59275e0a31691b2b213bcaa32f",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.4/terragrunt_darwin_arm64",
-	  "sha": "fd743ed5435794c4ab53ab5bb5112e7b4ba6866b2394cd8e23d026e85f7f5061",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.4/terragrunt_linux_386",
-	  "sha": "f69f92eda34c867f04bbd59069bf93dadec012f5905f867f7d35ca747af1f8bd",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.4/terragrunt_linux_amd64",
-	  "sha": "a5b3ad28fa72c16dd10edfe84ff631c2b965f80b202452579c381257161fe202",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.4/terragrunt_linux_arm64",
-	  "sha": "c3c4d24484abf584899ca58a1434c6113b7c633cf4aaa2cc3035fde97f4ff721",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.4/terragrunt_windows_386.exe",
-	  "sha": "84ca88e0692df6b249903b86bb04e9507f94299cc2e2a1dffdafda5f9b2e1ff4",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.4/terragrunt_windows_amd64.exe",
-	  "sha": "2eabb0b92cb9dedcd695d57d84cc8caceca0e1a555fb8dd00a005efed8c48d75",
-	},
-  },
-  "v0.37.3": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.3/terragrunt_darwin_amd64",
-	  "sha": "9d7c2e0cfabbe05bd56bd8e076295595c4eefef491f0c664ab93a92aac39b216",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.3/terragrunt_darwin_arm64",
-	  "sha": "d5be86a07cfb3340e5246108d88dfa1cb488ffb1cb1867269304194638bd5edf",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.3/terragrunt_linux_386",
-	  "sha": "ed9f0502f09053e2397ce60e5bfbcd33a91b08082003003a96c3af68ee5e2541",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.3/terragrunt_linux_amd64",
-	  "sha": "a0cf3b0c0d30c6b6204c5648ab70f608cd1e062ed340ee985781c818d6e5016a",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.3/terragrunt_linux_arm64",
-	  "sha": "061dc17ec815248d6835292b130c8cc3d5a401520c04a4c2a884e8fd55f82a4b",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.3/terragrunt_windows_386.exe",
-	  "sha": "b8a3503d6255675ae4f77c12a8b9caf09e864069a26a5a1db18c2086a321af52",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.3/terragrunt_windows_amd64.exe",
-	  "sha": "2b0406cea701af35de68713ec2ff653558c3c344acf8939ae384aea202c331da",
-	},
-  },
-  "v0.37.2": {
-	"darwin_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_darwin_amd64",
-	  "sha": "4ec12895c351e63181df4a446c80b7892f4258b9869de8a406e45902b227535f",
-	},
-	"darwin_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_darwin_arm64",
-	  "sha": "c2c217c0f1e8ae690bdcc8687c36e7ad4293e23078bba0ef1e34230b23317a29",
-	},
-	"linux_386": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_linux_386",
-	  "sha": "b3e6c846fbb4b36379845cafe1774c425850012ac687febb58bd6cc849551e9a",
-	},
-	"linux_amd64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_linux_amd64",
-	  "sha": "c5c8d5d7679951c3a851d79bbc38774d8f7713d528526225673569b36ff749ce",
-	},
-	"linux_arm64": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_linux_arm64",
-	  "sha": "aed8d133703175b16f4bfc35646767b566c19ab010c75ebd04d6482ec429f54d",
-	},
-	"windows_386.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_windows_386.exe",
-	  "sha": "60039c4ffe942a7f9148978f9538d02a243d0d9194c2dd1a325feda25dbf89e6",
-	},
-	"windows_amd64.exe": {
-	  "url": "https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_windows_amd64.exe",
-	  "sha": "4d3f2d4684dfc11d310e4a042e208e084410c12468be77e04a581ee1f5833317",
 	},
   },
 }
