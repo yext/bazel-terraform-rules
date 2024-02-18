@@ -16,7 +16,7 @@ jobs:
           path: src
       - name: Build Image
         run: |
-          pushd src/devcontainer
+          pushd src/.github/workflows/devcontainer
           docker build -t bazel-terraform-rules-devcontainer .
           popd
       - name: Push Image
