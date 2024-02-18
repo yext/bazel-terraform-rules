@@ -1,8 +1,5 @@
 {
-    "build": {
-        "dockerfile": "./Dockerfile",
-        "context": "."
-    },
+    "image": "ghcr.io/theothertomelliott/bazel-terraform-rules-devcontainer:latest",
     "onCreateCommand": "bazelisk", // Download the right version of Bazel
     // Configure tool-specific properties.
     "customizations": {
