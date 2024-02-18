@@ -2,9 +2,6 @@ name: Dev Container
 
 on:
     workflow_dispatch: {}
-    push:
-      branches:
-        - devcontainer_push
 
 jobs:
   update-devcontainer:
