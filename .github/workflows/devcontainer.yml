@@ -21,6 +21,7 @@ jobs:
           popd
       - name: Push Image
         run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u theothertomelliott --password-stdin
           docker tag bazel-terraform-rules-devcontainer ghcr.io/theothertomelliott/bazel-terraform-rules-devcontainer:latest
           docker push ghcr.io/theothertomelliott/bazel-terraform-rules-devcontainer:latest
   
