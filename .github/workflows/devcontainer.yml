@@ -4,8 +4,7 @@ on:
     workflow_dispatch: {}
     push:
       branches:
-        - main
-        - devcontainer
+        - devcontainer_push
 
 jobs:
   update-devcontainer:
