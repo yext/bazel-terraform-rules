@@ -4,9 +4,9 @@ go_test(
     name = "modules_test",
     srcs = ["modules_test.go"],
     data = [
-        "//modules/constants",
-        "//modules/consumer",
-        "//modules/vars",
+        "//examples/constants",
+        "//examples/consumer",
+        "//examples/vars",
         "@terraform_toolchain//:terraform_executable",
     ],
     tags = [

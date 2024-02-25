@@ -1,0 +1,7 @@
+load("@tf_modules//:def.bzl", "terraform_module")
+
+terraform_module(
+    name = "directories",
+    srcs = glob(["*.tf"]),
+    visibility = ["//visibility:public"],
+)

@@ -1,6 +1,6 @@
 load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
 
-def _terraform_executable_impl(ctx):
+def terraform_working_directory_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
   module_default = ctx.attr.module[DefaultInfo]
   runfiles = ctx.runfiles(module_default.files.to_list() + [ctx.executable.terraform])
@@ -19,23 +19,40 @@ $BASE_DIR/{1} init -reconfigure
 $BASE_DIR/{1} $@
 """.format(module.working_directory,ctx.executable.terraform.short_path, env_vars),
   )
-  
+  all_outputs = []
+
+  # Set the os name for the plugins dir 
+  os = ""
+  if ctx.target_platform_has_constraint(ctx.attr._darwin_constraint[platform_common.ConstraintValueInfo]):
+      os = "darwin"
+  if ctx.target_platform_has_constraint(ctx.attr._linux_constraint[platform_common.ConstraintValueInfo]):
+      os = "linux"
+
+  for provider in ctx.attr.provider_binaries:
+      for f in provider.files.to_list():
+          out = ctx.actions.declare_file("terraform.d/plugins/{}_amd64/".format(os) + f.basename)
+          all_outputs.append(out)
+          ctx.actions.run_shell(
+              outputs=[out],
+              inputs=depset([f]),
+              arguments=[f.path, out.path],
+              command="cp $1 $2")
+
+  for provider in ctx.attr.provider_binaries:
+      if not provider in ctx.attr.provider_versions.keys():
+          continue
+      provider_version = ctx.attr.provider_versions[provider]
+      for f in provider.files.to_list():
+          out = ctx.actions.declare_file("terraform.d/plugins/{1}/{0}_amd64/".format(os,provider_version) + f.basename)
+          all_outputs.append(out)
+          ctx.actions.run_shell(
+              outputs=[out],
+              inputs=depset([f]),
+              arguments=[f.path, out.path],
+              command="cp $1 $2")
+
   return DefaultInfo(
     executable = ctx.outputs.executable,
+    files = depset(all_outputs),
     runfiles = runfiles
   )
-
-terraform_executable = rule(
-   implementation = _terraform_executable_impl,
-   executable = True,
-    attrs = {
-        "module": attr.label(providers = [TerraformModuleInfo]),
-        "terraform": attr.label(
-            default = Label("@terraform_toolchain//:terraform_executable"),
-            allow_files = True,
-            executable = True,
-            cfg = "exec",
-        ),
-        "tf_vars": attr.string_dict(),
-    },
-)

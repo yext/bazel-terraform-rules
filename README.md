@@ -81,8 +81,8 @@ terraform_module(
     name = "mymodule",
     srcs = glob(["*.tf"]),
     module_deps = [
-        "//modules/module_a",
-        "//modules/module_b",
+        "//examples/module_a",
+        "//examples/module_b",
     ],
 )
 ```

@@ -1,80 +1,69 @@
-load("@tf_modules//rules:module.bzl", _terraform_module = "terraform_module")
-load("@tf_modules//rules:terraform.bzl", _terraform_executable = "terraform_executable")
-load("@tf_modules//rules:terragrunt.bzl", _terragrunt_executable = "terragrunt_executable")
-load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@tf_modules//rules:module.bzl", "TerraformModuleInfo", "terraform_module_impl")
+load("@tf_modules//rules:terraform.bzl", "terraform_working_directory_impl")
+load("@tf_modules//rules:terragrunt.bzl", "terragrunt_working_directory_impl")
 
-def terraform_module(
-    name,
-    module_path = "",
-    tf_vars = {},
-    srcs = [],
-    srcs_flatten = [],
-    module_deps = [], 
-    provider_binaries=[], 
-    provider_versions={}, 
-    terraform_executable=Label("@terraform_toolchain//:terraform_executable"),
-    absolute_module_source_paths = True,
-    ):
-    if name == "terraform":
-        fail("The name 'terraform' is reserved for the Terraform executable. Please use a different name for your module.")
-    _terraform_module(
-        name = name,
-        module_path = module_path,
-        srcs = srcs,
-        srcs_flatten = srcs_flatten,
-        module_deps = module_deps,
-        provider_binaries = provider_binaries,
-        provider_versions = provider_versions,
-        visibility = ["//visibility:public"],
-        absolute_module_source_paths = absolute_module_source_paths,
-    )
-    module_ref = ":{}".format(name)
-    _terraform_executable(
-        name = "{}_terraform".format(name),
-        module = module_ref,
-        terraform = terraform_executable,
-        tf_vars = tf_vars,
-    )
-    # If your module name shares the name of the package directory, create
-    # an alias to Terraform without the module name prefix
-    if name == paths.basename(native.package_name()):
-        native.alias(name = "terraform",actual = ":{}_terraform".format(name))
+terraform_working_directory = rule(
+   implementation = terraform_working_directory_impl,
+   executable = True,
+    attrs = {
+        "module": attr.label(providers = [TerraformModuleInfo]),
+        "terraform": attr.label(
+            default = Label("@terraform_toolchain//:terraform_executable"),
+            allow_files = True,
+            executable = True,
+            cfg = "exec",
+        ),
+        "tf_vars": attr.string_dict(),
+        "provider_binaries": attr.label_list(allow_files = True),
+        "provider_versions": attr.label_keyed_string_dict(allow_files = True),
+        '_darwin_constraint': attr.label(default = '@platforms//os:macos'),
+        '_linux_constraint': attr.label(default = '@platforms//os:linux'),
+    },
+)
 
-def terragrunt_module(
-    name,
-    module_path = "",
-    tf_vars = {},
-    srcs = [],
-    srcs_flatten = [],
-    module_deps = [], 
-    provider_binaries=[], 
-    provider_versions={}, 
-    terraform_executable=Label("@terraform_toolchain//:terraform_executable"),
-    terragrunt_executable=Label("@terragrunt_toolchain//:terragrunt_executable"),
-    absolute_module_source_paths = True,
-    ):
-    if name == "terragrunt":
-        fail("The name 'terragrunt' is reserved for the Terragrunt executable. Please use a different name for your module.")
-    _terraform_module(
-        name = name,
-        module_path = module_path,
-        srcs = srcs,
-        srcs_flatten = srcs_flatten,
-        module_deps = module_deps,
-        provider_binaries = provider_binaries,
-        provider_versions = provider_versions,
-        visibility = ["//visibility:public"],
-        absolute_module_source_paths = absolute_module_source_paths,
-    )
-    module_ref = ":{}".format(name)
-    _terragrunt_executable(
-        name = "{}_terragrunt".format(name),
-        module = module_ref,
-        terraform = terraform_executable,
-        terragrunt = terragrunt_executable,
-        tf_vars = tf_vars,
-    )
-    # If your module name shares the name of the package directory, create
-    # an alias to Terragrunt without the module name prefix
-    if name == paths.basename(native.package_name()):
-        native.alias(name = "terragrunt",actual = ":{}_terragrunt".format(name))
+terragrunt_working_directory = rule(
+   implementation = terragrunt_working_directory_impl,
+   executable = True,
+    attrs = {
+        "module": attr.label(providers = [TerraformModuleInfo]),
+        "terragrunt": attr.label(
+            default = Label("@terragrunt_toolchain//:terragrunt_executable"),
+            allow_files = True,
+            executable = True,
+            cfg = "exec",
+        ),
+        "terraform": attr.label(
+            default = Label("@terraform_toolchain//:terraform_executable"),
+            allow_files = True,
+            executable = True,
+            cfg = "exec",
+        ),
+        "tf_vars": attr.string_dict(),
+    },
+)
+
+terraform_module = rule(
+    implementation = terraform_module_impl,
+    attrs = {
+        "module_path": attr.string(
+            default = "",
+            doc = "The path to be used in the 'source' attribute of module blocks to refer to this module. If not set, the rule will use the path from the root of the workspace to the module's Bazel build file."
+        ),
+        "srcs": attr.label_list(
+            allow_files = True,
+            doc = "Source files that make up this Terraform module."    
+        ),
+        "srcs_flatten": attr.label_list(
+            allow_files = True,
+            doc = "Source files outside of this package to be included directly in the root of the module directory. For example, for a module in the package //my/package, that includes //other/directory:file.tf in srcs_flatten, the file would be included as if it were under //my/package:file.tf."    
+        ),
+        "module_deps": attr.label_list(
+            providers = [TerraformModuleInfo],
+            doc = "Other Terraform modules upon which this module depends.",
+        ),
+        "absolute_module_source_paths": attr.bool(
+            default = True,
+            doc = "If True, the 'source' attribute of module blocks for dependencies will be the full path from the workspace root to the module's Bazel build file (prefixed with ./). If False, the 'source' attribute will be the relative paths of the respective .tf files."
+        ),
+    },
+)

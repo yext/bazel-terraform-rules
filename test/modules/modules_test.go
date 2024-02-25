@@ -11,7 +11,7 @@ import (
 func TestConstants(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		TerraformBinary: utils.TerraformFinder(t),
-		TerraformDir:    "../../modules/constants",
+		TerraformDir:    "../../examples/constants",
 	}
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApply(t, terraformOptions)
@@ -22,7 +22,7 @@ func TestConstants(t *testing.T) {
 func TestConsumer(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		TerraformBinary: utils.TerraformFinder(t),
-		TerraformDir:    "../../modules/consumer",
+		TerraformDir:    "../../examples/consumer",
 	}
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApply(t, terraformOptions)

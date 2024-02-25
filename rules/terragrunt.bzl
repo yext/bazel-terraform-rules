@@ -1,10 +1,9 @@
-load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
 
-def _terragrunt_executable_impl(ctx):
+def terragrunt_working_directory_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
   module_default = ctx.attr.module[DefaultInfo]
-  build_base_path = paths.dirname(ctx.build_file_path)
   runfiles = ctx.runfiles(module_default.files.to_list() + [ctx.executable.terragrunt, ctx.executable.terraform])
   # TODO: build env var string from each variable
   env_vars = ""
@@ -28,24 +27,3 @@ $BASE_DIR/{1} $@
     executable = ctx.outputs.executable,
     runfiles = runfiles
   )
-
-terragrunt_executable = rule(
-   implementation = _terragrunt_executable_impl,
-   executable = True,
-    attrs = {
-        "module": attr.label(providers = [TerraformModuleInfo]),
-        "terragrunt": attr.label(
-            default = Label("@terragrunt_toolchain//:terragrunt_executable"),
-            allow_files = True,
-            executable = True,
-            cfg = "exec",
-        ),
-        "terraform": attr.label(
-            default = Label("@terraform_toolchain//:terraform_executable"),
-            allow_files = True,
-            executable = True,
-            cfg = "exec",
-        ),
-        "tf_vars": attr.string_dict(),
-    },
-)

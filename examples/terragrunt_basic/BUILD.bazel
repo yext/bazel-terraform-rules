@@ -1,0 +1,17 @@
+
+load("@tf_modules//:def.bzl", "terraform_module", "terragrunt_working_directory")
+
+terraform_module(
+    name = "terragrunt_basic",
+    srcs = ["terragrunt.hcl"],
+    absolute_module_source_paths = False,
+    module_deps = [
+        "//examples/terragrunt_basic/source"
+    ],
+    visibility = ["//visibility:public"],
+)
+
+terragrunt_working_directory(
+    name = "terragrunt",
+    module = ":terragrunt_basic",
+)
