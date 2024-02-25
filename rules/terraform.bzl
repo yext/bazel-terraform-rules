@@ -15,11 +15,13 @@ def terraform_working_directory_impl(ctx):
 BASE_DIR=$(pwd)
 {2}
 cd {0}
+pwd
 $BASE_DIR/{1} init -reconfigure
 $BASE_DIR/{1} $@
 """.format(module.working_directory,ctx.executable.terraform.short_path, env_vars),
   )
   all_outputs = []
+  final_runfiles = runfiles
 
   # Set the os name for the plugins dir 
   os = ""
@@ -51,8 +53,10 @@ $BASE_DIR/{1} $@
               arguments=[f.path, out.path],
               command="cp $1 $2")
 
+  final_runfiles = final_runfiles.merge(ctx.runfiles(all_outputs))
+
   return DefaultInfo(
     executable = ctx.outputs.executable,
     files = depset(all_outputs),
-    runfiles = runfiles
+    runfiles = final_runfiles
   )
