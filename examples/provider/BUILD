@@ -1,19 +1,56 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@tf_modules//:def.bzl", "terraform_module", "terraform_working_directory")
+load("@tf_modules//rules:provider.bzl", "terraform_provider")
 
 terraform_module(
     name = "provider",
-    srcs = glob(["*.tf"]),
+    srcs = ["main.tf"],
     visibility = ["//visibility:public"],
 )
 
 terraform_working_directory(
     name = "provider_terraform",
     module = ":provider",
-    provider_binaries = [":terraform-provider-example"],
-    provider_versions = {
-        ":terraform-provider-example": "terraform.example.com/examplecorp/example/1.0.0",
-    },
+    providers = [
+        ":provider_examplecorp_example",
+        ":provider_hashicorp_local",
+    ],
+)
+
+terraform_module(
+    name = "provider_legacy",
+    srcs = ["main_legacy.tf"],
+    visibility = ["//visibility:public"],
+)
+
+terraform_working_directory(
+    name = "provider_terraform_legacy",
+    module = ":provider_legacy",
+    providers = [
+        ":provider_examplecorp_example",
+        ":provider_hashicorp_local",
+    ],
+    terraform = "@terraform_toolchain-0.12.24//:terraform_executable",
+)
+
+terraform_provider(
+    name = "provider_examplecorp_example",
+    binary = ":terraform-provider-example",
+    hostname = "terraform.example.com",
+    namespace = "examplecorp",
+    type = "example",
+    version = "1.0.0",
+    visibility = ["//visibility:public"],
+)
+
+terraform_provider(
+    name = "provider_hashicorp_local",
+    binary = "@com_hashicorp_releases_hashicorp_local//:provider",
+    hostname = "registry.terraform.io",
+    namespace = "hashicorp",
+    type = "local",
+    version = "2.4.1",
+    visibility = ["//visibility:public"],
 )
 
 go_binary(

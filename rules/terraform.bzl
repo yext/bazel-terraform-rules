@@ -4,10 +4,13 @@ def terraform_working_directory_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
   module_default = ctx.attr.module[DefaultInfo]
   runfiles = ctx.runfiles(module_default.files.to_list() + [ctx.executable.terraform])
-  # TODO: build env var string from each variable
+  
+  # Construct environment variables for each terraform variable
   env_vars = ""
   for key in ctx.attr.tf_vars:
     env_vars = "{0}\nexport TF_VAR_{1}={2}".format(env_vars,key,ctx.attr.tf_vars[key])
+
+  # Create the script that runs Terraform
   ctx.actions.write(
     output = ctx.outputs.executable,
     is_executable = True,
@@ -15,48 +18,64 @@ def terraform_working_directory_impl(ctx):
 BASE_DIR=$(pwd)
 {2}
 cd {0}
-pwd
-$BASE_DIR/{1} init -reconfigure
+tar -xvzf .terraform.tar.gz > /dev/null
 $BASE_DIR/{1} $@
 """.format(module.working_directory,ctx.executable.terraform.short_path, env_vars),
   )
-  all_outputs = []
-  final_runfiles = runfiles
+  files_with_providers = runfiles.files.to_list()
 
-  # Set the os name for the plugins dir 
-  os = ""
-  if ctx.target_platform_has_constraint(ctx.attr._darwin_constraint[platform_common.ConstraintValueInfo]):
-      os = "darwin"
-  if ctx.target_platform_has_constraint(ctx.attr._linux_constraint[platform_common.ConstraintValueInfo]):
-      os = "linux"
+  # Create the terraformrc file
+  initrc = ctx.actions.declare_file("init.tfrc")
+  files_with_providers.append(initrc)
+  ctx.actions.write(
+    output = initrc,
+    content = """
+provider_installation {
+  filesystem_mirror {
+    path    = "./terraform.d/plugins"
+    include = ["*/*/*"]
+  }
+}
+    """
+  )
 
-  for provider in ctx.attr.provider_binaries:
+  for provider in ctx.attr.providers:
       for f in provider.files.to_list():
-          out = ctx.actions.declare_file("terraform.d/plugins/{}_amd64/".format(os) + f.basename)
-          all_outputs.append(out)
+          f_out = f.short_path.replace(provider.label.package + "/","",1)
+          out = ctx.actions.declare_file("terraform.d/{0}".format(f_out))
+          files_with_providers.append(out)
           ctx.actions.run_shell(
               outputs=[out],
               inputs=depset([f]),
               arguments=[f.path, out.path],
               command="cp $1 $2")
 
-  for provider in ctx.attr.provider_binaries:
-      if not provider in ctx.attr.provider_versions.keys():
-          continue
-      provider_version = ctx.attr.provider_versions[provider]
-      for f in provider.files.to_list():
-          out = ctx.actions.declare_file("terraform.d/plugins/{1}/{0}_amd64/".format(os,provider_version) + f.basename)
-          all_outputs.append(out)
-          ctx.actions.run_shell(
-              outputs=[out],
-              inputs=depset([f]),
-              arguments=[f.path, out.path],
-              command="cp $1 $2")
+  tf_lock = ctx.actions.declare_file(".terraform.lock.hcl")
+  dot_terraform_tar = ctx.actions.declare_file(".terraform.tar.gz")
 
-  final_runfiles = final_runfiles.merge(ctx.runfiles(all_outputs))
+  ctx.actions.run_shell(
+    outputs=[tf_lock, dot_terraform_tar],
+    inputs=files_with_providers,
+    arguments=[
+      dot_terraform_tar.dirname, 
+      ctx.executable.terraform.path, 
+      dot_terraform_tar.basename, 
+      initrc.basename,
+      tf_lock.basename],
+    command="""
+      TF=$(pwd)/$2
+      cd $1
+      TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF init -backend=false
+      TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF validate
+      tar hczf $3 .terraform
+      touch $5 # ensure the lock file exists (older Terraform versions don't create it)
+    """,
+  )
+  final_runfiles = runfiles.merge(ctx.runfiles([tf_lock, dot_terraform_tar]))
 
+  # TODO The legacy cache is needed for Terraform 0.12
   return DefaultInfo(
     executable = ctx.outputs.executable,
-    files = depset(all_outputs),
+    files = depset([tf_lock, dot_terraform_tar]),
     runfiles = final_runfiles
   )

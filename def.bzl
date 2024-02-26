@@ -1,4 +1,5 @@
 load("@tf_modules//rules:module.bzl", "TerraformModuleInfo", "terraform_module_impl")
+load("@tf_modules//rules:provider.bzl", "TerraformProviderInfo")
 load("@tf_modules//rules:terraform.bzl", "terraform_working_directory_impl")
 load("@tf_modules//rules:terragrunt.bzl", "terragrunt_working_directory_impl")
 
@@ -14,10 +15,7 @@ terraform_working_directory = rule(
             cfg = "exec",
         ),
         "tf_vars": attr.string_dict(),
-        "provider_binaries": attr.label_list(allow_files = True),
-        "provider_versions": attr.label_keyed_string_dict(allow_files = True),
-        '_darwin_constraint': attr.label(default = '@platforms//os:macos'),
-        '_linux_constraint': attr.label(default = '@platforms//os:linux'),
+        "providers": attr.label_list(providers = [TerraformProviderInfo]),
     },
 )
 

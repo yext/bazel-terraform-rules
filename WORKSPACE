@@ -60,3 +60,18 @@ register_terraform_toolchain("0.12.23")
 load("@tf_modules//toolchains/terragrunt:toolchain.bzl", "register_terragrunt_toolchain")
 
 register_terragrunt_toolchain("v0.45.2", default=True)
+
+http_archive(
+    name = "com_hashicorp_releases_hashicorp_local",
+    sha256 = "244b445bf34ddbd167731cc6c6b95bbed231dc4493f8cc34bd6850cfe1f78528",
+    urls = ["https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_linux_amd64.zip"],
+    build_file_content = """
+exports_files(["terraform-provider-local_v2.4.1_x5"])
+
+alias(
+    name = "provider",
+    actual = "terraform-provider-local_v2.4.1_x5",
+    visibility = ["//visibility:public"],
+)
+""",
+)
