@@ -30,6 +30,8 @@ $BASE_DIR/{1} $@
   ctx.actions.write(
     output = initrc,
     content = """
+disable_checkpoint = true
+
 provider_installation {
   filesystem_mirror {
     path    = "./terraform.d/plugins"
