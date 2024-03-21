@@ -11,6 +11,10 @@ def terraform_working_directory_impl(ctx):
   for key in ctx.attr.tf_vars:
     env_vars = "{0}\nexport TF_VAR_{1}={2}".format(env_vars,key,ctx.attr.tf_vars[key])
 
+  dot_tf_prep = ""
+  if not ctx.attr.init_on_run:
+    dot_tf_prep = "tar -xvzf .terraform.tar.gz > /dev/null"
+
   # Create the script that runs Terraform
   ctx.actions.write(
     output = ctx.outputs.executable,
@@ -19,9 +23,9 @@ def terraform_working_directory_impl(ctx):
 BASE_DIR=$(pwd)
 {2}
 cd {0}
-tar -xvzf .terraform.tar.gz > /dev/null
+{3}
 $BASE_DIR/{1} $@
-""".format(module.working_directory,ctx.executable.terraform.short_path, env_vars),
+""".format(module.working_directory,ctx.executable.terraform.short_path, env_vars, dot_tf_prep),
   )
   files_with_providers = runfiles.files.to_list()
 
