@@ -50,7 +50,6 @@ def terraform_provider_impl(ctx):
 
 terraform_provider = rule(
    implementation = terraform_provider_impl,
-#    executable = True,
     attrs = {
         "binary": attr.label(mandatory=True, allow_single_file=True),
         "hostname": attr.string(mandatory=True),

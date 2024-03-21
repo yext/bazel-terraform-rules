@@ -34,7 +34,7 @@ Note that you can only use `default=True` once.
 To use a Terraform module in Bazel, add a `BUILD` file to the same directory as the module with a `terraform_module` rule.
 
 ```
-load("@tf_modules//:def.bzl", "terraform_module")
+load("@tf_modules//rules:module.bzl", "terraform_module")
 
 terraform_module(
     name = "mymodule",

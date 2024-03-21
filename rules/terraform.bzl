@@ -1,4 +1,5 @@
 load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
+load("@tf_modules//rules:provider.bzl", "TerraformProviderInfo")
 
 def terraform_working_directory_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
@@ -24,6 +25,17 @@ $BASE_DIR/{1} $@
   )
   files_with_providers = runfiles.files.to_list()
 
+  installation = ""
+  if not ctx.attr.init_on_run:
+    installation = """
+provider_installation {
+  filesystem_mirror {
+    path    = "./terraform.d/plugins"
+    include = ["*/*/*"]
+  }
+}
+"""
+
   # Create the terraformrc file
   initrc = ctx.actions.declare_file("init.tfrc")
   files_with_providers.append(initrc)
@@ -32,13 +44,8 @@ $BASE_DIR/{1} $@
     content = """
 disable_checkpoint = true
 
-provider_installation {
-  filesystem_mirror {
-    path    = "./terraform.d/plugins"
-    include = ["*/*/*"]
-  }
-}
-    """
+{}
+    """.format(installation)
   )
 
   for provider in ctx.attr.providers:
@@ -52,32 +59,55 @@ provider_installation {
               arguments=[f.path, out.path],
               command="cp $1 $2")
 
-  tf_lock = ctx.actions.declare_file(".terraform.lock.hcl")
-  dot_terraform_tar = ctx.actions.declare_file(".terraform.tar.gz")
+  buildfiles = depset([])
 
-  ctx.actions.run_shell(
-    outputs=[tf_lock, dot_terraform_tar],
-    inputs=files_with_providers,
-    arguments=[
-      dot_terraform_tar.dirname, 
-      ctx.executable.terraform.path, 
-      dot_terraform_tar.basename, 
-      initrc.basename,
-      tf_lock.basename],
-    command="""
-      TF=$(pwd)/$2
-      cd $1
-      TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF init -backend=false
-      TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF validate
-      tar hczf $3 .terraform
-      touch $5 # ensure the lock file exists (older Terraform versions don't create it)
-    """,
-  )
-  final_runfiles = runfiles.merge(ctx.runfiles([tf_lock, dot_terraform_tar]))
+  if not ctx.attr.init_on_run:
+    tf_lock = ctx.actions.declare_file(".terraform.lock.hcl")
+    dot_terraform_tar = ctx.actions.declare_file(".terraform.tar.gz")
+
+    ctx.actions.run_shell(
+      outputs=[tf_lock, dot_terraform_tar],
+      inputs=files_with_providers,
+      arguments=[
+        dot_terraform_tar.dirname, 
+        ctx.executable.terraform.path, 
+        dot_terraform_tar.basename, 
+        initrc.basename,
+        tf_lock.basename],
+      command="""
+        TF=$(pwd)/$2
+        cd $1
+        TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF init -backend=false
+        TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF validate
+        tar hczf $3 .terraform
+        touch $5 # ensure the lock file exists (older Terraform versions don't create it)
+      """,
+    )
+    buildfiles = depset([tf_lock, dot_terraform_tar])
+    final_runfiles = runfiles.merge(ctx.runfiles([tf_lock, dot_terraform_tar]))
+  else:
+    final_runfiles = runfiles
 
   # TODO The legacy cache is needed for Terraform 0.12
   return DefaultInfo(
     executable = ctx.outputs.executable,
-    files = depset([tf_lock, dot_terraform_tar]),
+    files = buildfiles,
     runfiles = final_runfiles
   )
+
+terraform_working_directory = rule(
+   implementation = terraform_working_directory_impl,
+   executable = True,
+    attrs = {
+        "module": attr.label(providers = [TerraformModuleInfo]),
+        "terraform": attr.label(
+            default = Label("@terraform_toolchain//:terraform_executable"),
+            allow_files = True,
+            executable = True,
+            cfg = "exec",
+        ),
+        "tf_vars": attr.string_dict(),
+        "providers": attr.label_list(providers = [TerraformProviderInfo]),
+        "init_on_run": attr.bool(default = False),
+    },
+)

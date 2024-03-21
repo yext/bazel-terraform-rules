@@ -78,3 +78,29 @@ def terraform_module_impl(ctx):
             absolute_module_source_paths = ctx.attr.absolute_module_source_paths,
         ),
     ]
+
+terraform_module = rule(
+    implementation = terraform_module_impl,
+    attrs = {
+        "module_path": attr.string(
+            default = "",
+            doc = "The path to be used in the 'source' attribute of module blocks to refer to this module. If not set, the rule will use the path from the root of the workspace to the module's Bazel build file."
+        ),
+        "srcs": attr.label_list(
+            allow_files = True,
+            doc = "Source files that make up this Terraform module."    
+        ),
+        "srcs_flatten": attr.label_list(
+            allow_files = True,
+            doc = "Source files outside of this package to be included directly in the root of the module directory. For example, for a module in the package //my/package, that includes //other/directory:file.tf in srcs_flatten, the file would be included as if it were under //my/package:file.tf."    
+        ),
+        "module_deps": attr.label_list(
+            providers = [TerraformModuleInfo],
+            doc = "Other Terraform modules upon which this module depends.",
+        ),
+        "absolute_module_source_paths": attr.bool(
+            default = True,
+            doc = "If True, the 'source' attribute of module blocks for dependencies will be the full path from the workspace root to the module's Bazel build file (prefixed with ./). If False, the 'source' attribute will be the relative paths of the respective .tf files."
+        ),
+    },
+)
