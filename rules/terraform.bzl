@@ -53,9 +53,11 @@ provider_installation {
 }
 """
 
+  intermediates = []
+
   # Create the terraformrc file
   initrc = ctx.actions.declare_file(working_dir + "init.tfrc")
-  all_outputs.append(initrc)
+  intermediates.append(initrc)
   ctx.actions.write(
     output = initrc,
     content = """
@@ -69,7 +71,7 @@ disable_checkpoint = true
       for f in provider.files.to_list():
           f_out = f.short_path.replace(provider.label.package + "/","",1)
           out = ctx.actions.declare_file(working_dir + "terraform.d/{0}".format(f_out))
-          all_outputs.append(out)
+          intermediates.append(out)
           ctx.actions.run_shell(
               outputs=[out],
               inputs=depset([f]),
@@ -81,7 +83,7 @@ disable_checkpoint = true
     dot_terraform_tar = ctx.actions.declare_file(working_dir + ".terraform.tar.gz")
     ctx.actions.run_shell(
       outputs=[tf_lock, dot_terraform_tar],
-      inputs=all_outputs + [ctx.executable.terraform],
+      inputs=all_outputs + intermediates + [ctx.executable.terraform],
       arguments=[
         dot_terraform_tar.dirname, 
         ctx.executable.terraform.path, 
@@ -90,12 +92,19 @@ disable_checkpoint = true
         tf_lock.basename],
       command="""
         TF=$(pwd)/$2
-        echo "TF=$TF"
-        echo "Changing into $1"
         cd $1
         TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF init -backend=false
+        if [ $? -ne 0 ]; then
+          exit 1
+        fi
         TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF validate
+        if [ $? -ne 0 ]; then
+          exit 1
+        fi
         tar hczf $3 .terraform
+        if [ $? -ne 0 ]; then
+          exit 1
+        fi
         touch $5 # ensure the lock file exists (older Terraform versions don't create it)
       """,
     )
