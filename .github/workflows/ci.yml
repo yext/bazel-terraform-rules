@@ -28,5 +28,5 @@ jobs:
             ${{ runner.os }}-${{ hashFiles('WORKSPACE') }}
       - name: Run tests
         run: bazelisk test //...
-      - name: Validate providers module
-        run: bazelisk run //examples/provider:terraform -- validate
+      - name: Plan providers module
+        run: bazelisk run //examples/provider:provider_terraform -- plan
