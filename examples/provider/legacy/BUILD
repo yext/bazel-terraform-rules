@@ -1,17 +1,18 @@
 load("@tf_modules//rules:module.bzl", "terraform_module")
 load("@tf_modules//rules:terraform.bzl", "terraform_working_directory")
 
-terraform_module(
-    name = "provider",
-    srcs = ["main.tf"],
-    visibility = ["//visibility:public"],
-)
-
 terraform_working_directory(
-    name = "provider_terraform",
-    module = ":provider",
+    name = "provider_terraform_legacy",
+    module = ":provider_legacy",
     providers = [
         "//examples/provider/example_provider:provider_examplecorp_example",
         "//examples/provider/hashicorp_local:provider_hashicorp_local",
     ],
+    terraform = "@terraform_toolchain-0.12.24//:terraform_executable",
+)
+
+terraform_module(
+    name = "provider_legacy",
+    srcs = ["main_legacy.tf"],
+    visibility = ["//visibility:public"],
 )

@@ -1,4 +1,5 @@
-load("@tf_modules//:def.bzl", "terraform_module")
+# load("@tf_modules//:def.bzl", "terraform_module")
+load("@tf_modules//rules:module.bzl", "terraform_module")
 
 terraform_module(
     name = "multimodule",
