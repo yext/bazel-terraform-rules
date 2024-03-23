@@ -61,17 +61,23 @@ load("@tf_modules//toolchains/terragrunt:toolchain.bzl", "register_terragrunt_to
 
 register_terragrunt_toolchain("v0.45.2", default=True)
 
-http_archive(
-    name = "com_hashicorp_releases_hashicorp_local",
-    sha256 = "244b445bf34ddbd167731cc6c6b95bbed231dc4493f8cc34bd6850cfe1f78528",
-    urls = ["https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_linux_amd64.zip"],
-    build_file_content = """
-exports_files(["terraform-provider-local_v2.4.1_x5"])
+load("//:providers.bzl", "terraform_provider")
 
-alias(
-    name = "provider",
-    actual = "terraform-provider-local_v2.4.1_x5",
-    visibility = ["//visibility:public"],
-)
-""",
+terraform_provider(
+    name = "provider_hashicorp_local",
+    namespace = "hashicorp",
+    type = "local",
+    version = "2.4.1",
+
+    # Details obtained from:
+    # https://registry.terraform.io/v1/providers/hashicorp/local/2.4.1/download/linux/amd64
+    # https://registry.terraform.io/v1/providers/hashicorp/local/2.4.1/download/darwin/amd64
+    url_by_platform = {
+        "linux_amd64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_linux_amd64.zip",
+        "darwin_amd64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_darwin_amd64.zip"
+    },
+    sha256_by_platform = {
+        "linux_amd64": "244b445bf34ddbd167731cc6c6b95bbed231dc4493f8cc34bd6850cfe1f78528",
+        "darwin_amd64": "3c330bdb626123228a0d1b1daa6c741b4d5d484ab1c7ae5d2f48d4c9885cc5e9"
+    }
 )

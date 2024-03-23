@@ -1,6 +1,6 @@
 TerraformProviderInfo = provider(
     doc = "Contains information about a Terraform provider",
-    fields = ["hostname", "namespace", "type", "version"],
+    fields = ["hostname", "namespace", "type", "version", "file_to_subpath"],
 )
 
 def terraform_provider_impl(ctx):
@@ -13,8 +13,12 @@ def terraform_provider_impl(ctx):
         if ctx.target_platform_has_constraint(platform[platform_common.ConstraintValueInfo]):
             arch = ctx.attr._arch_name[platform]
 
+    file_to_subpath = {}
+
     f = ctx.file.binary
-    out_legacy = ctx.actions.declare_file("plugins/{}_{}/".format(os,arch) + f.basename)
+    subpath = "plugins/{}_{}/".format(os,arch) + f.basename
+    out_legacy = ctx.actions.declare_file(subpath)
+    file_to_subpath[out_legacy.path] = subpath
     ctx.actions.run_shell(
         outputs=[out_legacy],
         inputs=depset([f]),
@@ -23,12 +27,15 @@ def terraform_provider_impl(ctx):
     )
 
     target = "{}_{}".format(os, arch)
-    out_modern = ctx.actions.declare_file("plugins/{0}/{1}/{2}/terraform-provider-{2}_{3}_{4}.zip".format(
+    subpath = "plugins/{0}/{1}/{2}/terraform-provider-{2}_{3}_{4}.zip".format(
         ctx.attr.hostname,
         ctx.attr.namespace,
         ctx.attr.type,
         ctx.attr.version,
-        target))
+        target)
+    out_modern = ctx.actions.declare_file(subpath)
+    file_to_subpath[out_modern.path] = subpath
+
     ctx.actions.run_shell(
         outputs=[out_modern],
         inputs=depset([f]),
@@ -45,6 +52,7 @@ def terraform_provider_impl(ctx):
             namespace = ctx.attr.namespace,
             type = ctx.attr.type,
             version = ctx.attr.version,
+            file_to_subpath = file_to_subpath,
         ),
     ]
 

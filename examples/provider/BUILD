@@ -8,10 +8,10 @@ terraform_module(
 )
 
 terraform_working_directory(
-    name = "provider_terraform",
+    name = "terraform",
     module = ":provider",
     providers = [
         "//examples/provider/example_provider:provider_examplecorp_example",
-        "//examples/provider/hashicorp_local:provider_hashicorp_local",
+        "@provider_hashicorp_local//:provider",
     ],
 )

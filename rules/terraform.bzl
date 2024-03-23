@@ -1,6 +1,6 @@
+load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
 load("@tf_modules//rules:provider.bzl", "TerraformProviderInfo")
-load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def terraform_working_directory_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
@@ -68,9 +68,11 @@ disable_checkpoint = true
   )
 
   for provider in ctx.attr.providers:
+      provider_info = provider[TerraformProviderInfo]
       for f in provider.files.to_list():
-          f_out = f.short_path.replace(provider.label.package + "/","",1)
+          f_out = provider_info.file_to_subpath[f.path]
           out = ctx.actions.declare_file(working_dir + "terraform.d/{0}".format(f_out))
+
           intermediates.append(out)
           ctx.actions.run_shell(
               outputs=[out],
