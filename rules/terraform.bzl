@@ -93,6 +93,9 @@ disable_checkpoint = true
       command="""
         TF=$(pwd)/$2
         cd $1
+
+        mkdir .terraform
+
         TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF init -backend=false
         if [ $? -ne 0 ]; then
           exit 1
