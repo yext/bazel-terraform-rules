@@ -7,7 +7,7 @@ def _impl(ctx):
         if arch == "x86_64":
             arch = "amd64"
 
-    platform = "{}_{}".format(ctx.os.name, ctx.os.arch)
+    platform = "{}_{}".format(os, arch)
 
     ctx.download_and_extract(
         url = ctx.attr.url_by_platform[platform], 
