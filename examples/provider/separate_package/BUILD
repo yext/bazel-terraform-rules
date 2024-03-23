@@ -5,6 +5,6 @@ terraform_working_directory(
     module = "//examples/provider:provider",
     providers = [
         "//examples/provider/example_provider:provider_examplecorp_example",
-        "//examples/provider/hashicorp_local:provider_hashicorp_local",
+        "@provider_hashicorp_local//:provider",
     ],
 )

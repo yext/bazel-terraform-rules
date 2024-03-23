@@ -6,7 +6,7 @@ terraform_working_directory(
     module = ":provider_legacy",
     providers = [
         "//examples/provider/example_provider:provider_examplecorp_example",
-        "//examples/provider/hashicorp_local:provider_hashicorp_local",
+        "@provider_hashicorp_local//:provider",
     ],
     terraform = "@terraform_toolchain-0.12.24//:terraform_executable",
 )
