@@ -1,4 +1,12 @@
 def _impl(ctx):
+    os = ctx.os.name
+    arch = ctx.os.arch
+
+    if os.rfind("mac") != -1:
+        os = "darwin"
+        if arch == "x86_64":
+            arch = "amd64"
+
     platform = "{}_{}".format(ctx.os.name, ctx.os.arch)
 
     ctx.download_and_extract(

@@ -29,4 +29,4 @@ jobs:
       - name: Run tests
         run: bazelisk test //...
       - name: Plan providers module
-        run: bazelisk run //examples/provider:provider_terraform -- plan
+        run: bazelisk run //examples/provider:terraform -- plan
