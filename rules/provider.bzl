@@ -22,8 +22,11 @@ def terraform_provider_impl(ctx):
     ctx.actions.run_shell(
         outputs=[out_legacy],
         inputs=depset([f]),
-        arguments=[f.path, out_legacy.path],
-        command="cp $1 $2"
+        env = {
+            "INPUT_FILE": f.path,
+            "OUTPUT_FILE": out_legacy.path,
+        },
+        command="cp $INPUT_FILE $OUTPUT_FILE"
     )
 
     target = "{}_{}".format(os, arch)
@@ -39,8 +42,12 @@ def terraform_provider_impl(ctx):
     ctx.actions.run_shell(
         outputs=[out_modern],
         inputs=depset([f]),
-        arguments=[f.path, f.basename, out_modern.path],
-        command="cp $1 $2 && zip $3 $2"
+        env={
+            "INPUT_FILE": f.path,
+            "INTERMEDIATE_FILE": f.basename,
+            "OUTPUT_FILE": out_modern.path
+        },
+        command="cp $INPUT_FILE $INTERMEDIATE_FILE && zip $OUTPUT_FILE $INTERMEDIATE_FILE"
     )
 
     return [

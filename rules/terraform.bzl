@@ -25,9 +25,7 @@ def terraform_working_directory_impl(ctx):
   for key in ctx.attr.tf_vars:
     env_vars = "{0}\nexport TF_VAR_{1}={2}".format(env_vars,key,ctx.attr.tf_vars[key])
 
-  dot_tf_prep = ""
-  if not ctx.attr.init_on_run:
-    dot_tf_prep = "tar -xvzf .terraform.tar.gz > /dev/null"
+  prep_command = "tar -xvzf .terraform.tar.gz > /dev/null"
 
   # Create the script that runs Terraform
   ctx.actions.write(
@@ -39,11 +37,35 @@ BASE_DIR=$(pwd)
 cd {0}
 {3}
 $BASE_DIR/{1} $@
-""".format(build_base_path + "/" + working_dir, ctx.executable.terraform.path, env_vars, dot_tf_prep, working_dir_prefix),
-  )
+""".format(
+    build_base_path + "/" + working_dir, 
+    ctx.executable.terraform.path, 
+    env_vars, 
+    prep_command,
+  ),
+)
+
+  included_providers = []
+  for provider in ctx.attr.providers:
+      provider_info = provider[TerraformProviderInfo]
+      included_providers.append("{}/{}/{}".format(provider_info.hostname, provider_info.namespace, provider_info.type))
 
   installation = ""
-  if not ctx.attr.init_on_run:
+  if ctx.attr.allow_provider_download:
+    installation = """
+provider_installation {
+  filesystem_mirror {
+    path    = "./terraform.d/plugins"
+    include = %PROVIDERS%
+  }
+  direct {
+    include = ["*/*/*"]
+    exclude = %PROVIDERS%
+  }
+}
+""".replace("%PROVIDERS%", json.encode(included_providers))
+
+  else:
     installation = """
 provider_installation {
   filesystem_mirror {
@@ -72,49 +94,50 @@ disable_checkpoint = true
       for f in provider.files.to_list():
           f_out = provider_info.file_to_subpath[f.path]
           out = ctx.actions.declare_file(working_dir + "terraform.d/{0}".format(f_out))
-
           intermediates.append(out)
+
           ctx.actions.run_shell(
               outputs=[out],
               inputs=depset([f]),
               arguments=[f.path, out.path],
-              command="cp $1 $2")
+              command="cp $1 $2"
+          )
 
-  if not ctx.attr.init_on_run:
-    tf_lock = ctx.actions.declare_file(working_dir + ".terraform.lock.hcl")
-    dot_terraform_tar = ctx.actions.declare_file(working_dir + ".terraform.tar.gz")
-    ctx.actions.run_shell(
-      outputs=[tf_lock, dot_terraform_tar],
-      inputs=all_outputs + intermediates + [ctx.executable.terraform],
-      arguments=[
-        dot_terraform_tar.dirname, 
-        ctx.executable.terraform.path, 
-        dot_terraform_tar.basename, 
-        initrc.basename,
-        tf_lock.basename],
-      command="""
-        TF=$(pwd)/$2
-        cd $1
+  tf_lock = ctx.actions.declare_file(working_dir + ".terraform.lock.hcl")
+  dot_terraform_tar = ctx.actions.declare_file(working_dir + ".terraform.tar.gz")
+  ctx.actions.run_shell(
+    outputs=[tf_lock, dot_terraform_tar],
+    inputs=all_outputs + intermediates + [ctx.executable.terraform],
+    env = {
+      "TF_RELATIVE": ctx.executable.terraform.path,
+      "WORKING_DIR": dot_terraform_tar.dirname,
+      "TF_CLI_CONFIG_FILE": initrc.basename,
+      "DOT_TERRAFORM_TAR": dot_terraform_tar.basename,
+      "TF_LOCK": tf_lock.basename,
+    },
+    command="""
+      TF=$(pwd)/$TF_RELATIVE
+      cd $WORKING_DIR
 
-        mkdir .terraform
+      mkdir .terraform
 
-        TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF init -backend=false
-        if [ $? -ne 0 ]; then
-          exit 1
-        fi
-        TF_CLI_CONFIG_FILE=$(pwd)/$4 $TF validate
-        if [ $? -ne 0 ]; then
-          exit 1
-        fi
-        tar hczf $3 .terraform
-        if [ $? -ne 0 ]; then
-          exit 1
-        fi
-        touch $5 # ensure the lock file exists (older Terraform versions don't create it)
-      """,
-    )
-    all_outputs.append(tf_lock)
-    all_outputs.append(dot_terraform_tar)
+      $TF init -backend=false
+      if [ $? -ne 0 ]; then
+        exit 1
+      fi
+      $TF validate
+      if [ $? -ne 0 ]; then
+        exit 1
+      fi
+      tar hczf $DOT_TERRAFORM_TAR .terraform
+      if [ $? -ne 0 ]; then
+        exit 1
+      fi
+      touch $TF_LOCK # ensure the lock file exists (older Terraform versions don't create it)
+    """,
+  )
+  all_outputs.append(tf_lock)
+  all_outputs.append(dot_terraform_tar)
 
   # TODO The legacy cache is needed for Terraform 0.12
   return DefaultInfo(
@@ -136,6 +159,6 @@ terraform_working_directory = rule(
         ),
         "tf_vars": attr.string_dict(),
         "providers": attr.label_list(providers = [TerraformProviderInfo]),
-        "init_on_run": attr.bool(default = False),
+        "allow_provider_download": attr.bool(default=False),
     },
 )
