@@ -104,15 +104,15 @@ disable_checkpoint = true
           )
 
   tf_lock = ctx.actions.declare_file(working_dir + ".terraform.lock.hcl")
+  dot_terraform = ctx.actions.declare_directory(working_dir + ".terraform")
   dot_terraform_tar = ctx.actions.declare_file(working_dir + ".terraform.tar.gz")
   ctx.actions.run_shell(
-    outputs=[tf_lock, dot_terraform_tar],
+    outputs=[tf_lock, dot_terraform],
     inputs=all_outputs + intermediates + [ctx.executable.terraform],
     env = {
       "TF_RELATIVE": ctx.executable.terraform.path,
       "WORKING_DIR": dot_terraform_tar.dirname,
       "TF_CLI_CONFIG_FILE": initrc.basename,
-      "DOT_TERRAFORM_TAR": dot_terraform_tar.basename,
       "TF_LOCK": tf_lock.basename,
     },
     command="""
@@ -120,6 +120,7 @@ disable_checkpoint = true
       cd $WORKING_DIR
 
       mkdir .terraform
+      touch $TF_LOCK # ensure the lock file exists (older Terraform versions don't create it)
 
       $TF init -backend=false
       if [ $? -ne 0 ]; then
@@ -129,17 +130,31 @@ disable_checkpoint = true
       if [ $? -ne 0 ]; then
         exit 1
       fi
+    """,
+  )
+  all_outputs.append(tf_lock)
+
+  ctx.actions.run_shell(
+    progress_message="Compressing .terraform directory",
+    outputs=[dot_terraform_tar],
+    inputs=[dot_terraform],
+    env = {
+      "WORKING_DIR": dot_terraform_tar.dirname,
+      "DOT_TERRAFORM_TAR": dot_terraform_tar.basename,
+    },
+    command="""
+      cd $WORKING_DIR
       tar hczf $DOT_TERRAFORM_TAR .terraform
       if [ $? -ne 0 ]; then
         exit 1
       fi
-      touch $TF_LOCK # ensure the lock file exists (older Terraform versions don't create it)
     """,
   )
-  all_outputs.append(tf_lock)
   all_outputs.append(dot_terraform_tar)
 
   # TODO The legacy cache is needed for Terraform 0.12
+  all_outputs += intermediates
+
   return DefaultInfo(
     executable = ctx.outputs.executable,
     files = depset(all_outputs),

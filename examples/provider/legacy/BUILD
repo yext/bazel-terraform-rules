@@ -2,7 +2,7 @@ load("@tf_modules//rules:module.bzl", "terraform_module")
 load("@tf_modules//rules:terraform.bzl", "terraform_working_directory")
 
 terraform_working_directory(
-    name = "provider_terraform_legacy",
+    name = "terraform",
     module = ":provider_legacy",
     providers = [
         "//examples/provider/example_provider:provider_examplecorp_example",
