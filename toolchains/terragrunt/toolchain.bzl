@@ -12,19 +12,6 @@ def get_dependencies(version):
             }
     return out
 
-def declare_terragrunt_toolchains(version, dependencies):
-    for key, info in dependencies.items():
-        name = "terragrunt_{}".format(key)
-        toolchain_name = "{}_toolchain".format(name)
-
-        native.toolchain(
-            name = toolchain_name,
-            exec_compatible_with = info["exec_compatible_with"],
-            target_compatible_with = info["target_compatible_with"],
-            toolchain = name,
-            toolchain_type = "@tf_modules//toolchains/terragrunt:toolchain_type",
-        )
-
 def _detect_platform_arch(ctx):
     if ctx.os.name == "linux":
         platform, arch = "linux", "amd64"
@@ -38,7 +25,7 @@ def _detect_platform_arch(ctx):
 def _terragrunt_build_file(ctx, version):
     ctx.template(
         "BUILD",
-        Label("@tf_modules//toolchains/terragrunt:BUILD.toolchain"),
+        Label("@tf_modules//toolchains/terragrunt:BUILD.terragrunt"),
         executable = False,
         substitutions = {
             "{version}": version,

@@ -1,0 +1,7 @@
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "{name}",
+    srcs = ["terraform/terraform"],
+    visibility = ["//visibility:public"]
+)
