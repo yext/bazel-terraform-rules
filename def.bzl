@@ -63,7 +63,14 @@ def terraform_module(
         if len(version_segments) != 4:
             fail("Invalid provider version format (expected <hostname>/<namespace>/<type>/<version>): {}".format(v))
         
-        provider_name = "{}_{}".format(name, provider_binary.split(":")[1])
+        target = ""
+        segments = provider_binary.split(":")
+        if len(segments) > 1:
+            target = segments[1]
+        else:
+            target = provider_binary.split("/")[-1]
+
+        provider_name = "{}_{}".format(name, target)
         terraform_provider(
             name = provider_name,
             binary = provider_binary,
