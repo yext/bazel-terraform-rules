@@ -3,7 +3,7 @@ load("@tf_modules//rules:provider.bzl", "terraform_provider")
 
 terraform_provider(
     name = "provider_examplecorp_example",
-    binary = ":terraform-provider-example",
+    binary = ":example_provider",
     hostname = "terraform.example.com",
     namespace = "examplecorp",
     type = "example",
@@ -11,12 +11,15 @@ terraform_provider(
     visibility = ["//visibility:public"],
 )
 
-
-go_binary(
-    name = "terraform-provider-example",
-    srcs = glob(["*.go"]),
-    importpath = "tfmodules/modules/provider",
-    visibility = ["//visibility:public"],
+go_library(
+    name = "example_provider_lib",
+    srcs = [
+        "main.go",
+        "provider.go",
+        "resource_server.go",
+    ],
+    importpath = "tfmodules/examples/provider/example_provider",
+    visibility = ["//visibility:private"],
     deps = [
         "@com_github_hashicorp_terraform_plugin_sdk//helper/schema",
         "@com_github_hashicorp_terraform_plugin_sdk//plugin",
@@ -24,18 +27,8 @@ go_binary(
     ],
 )
 
-go_library(
-    name = "provider_lib",
-    srcs = [
-        "main.go",
-        "provider.go",
-        "resource_server.go",
-    ],
-    importpath = "tfmodules/modules/provider",
-    visibility = ["//visibility:private"],
-    deps = [
-        "@com_github_hashicorp_terraform_plugin_sdk//helper/schema",
-        "@com_github_hashicorp_terraform_plugin_sdk//plugin",
-        "@com_github_hashicorp_terraform_plugin_sdk//terraform",
-    ],
+go_binary(
+    name = "example_provider",
+    embed = [":example_provider_lib"],
+    visibility = ["//visibility:public"],
 )

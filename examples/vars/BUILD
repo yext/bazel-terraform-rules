@@ -11,6 +11,6 @@ terraform_working_directory(
     name = "terraform",
     module = ":vars",
     tf_vars = {
-        "test_input": "test_value"
+        "test_input": "test_value",
     },
 )

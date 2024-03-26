@@ -9,6 +9,13 @@ go_library(
 
 go_binary(
     name = "getreleases_terragrunt",
-    embed = [":getreleases_lib"],
+    embed = [":getreleases_terragrunt_lib"],
     visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "getreleases_terragrunt_lib",
+    srcs = ["main.go"],
+    importpath = "tfmodules/tools/getreleases_terragrunt",
+    visibility = ["//visibility:private"],
 )

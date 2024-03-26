@@ -5,10 +5,10 @@ terraform_module(
     name = "consumer",
     srcs = glob(["*.tf"]),
     module_deps = [
+        "//examples/alternatepath",
         "//examples/constants",
         "//examples/transitive",
         "//examples/transitive_relative",
-        "//examples/alternatepath",
     ],
     visibility = ["//visibility:public"],
 )
