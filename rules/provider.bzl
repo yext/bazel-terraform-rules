@@ -15,8 +15,10 @@ def terraform_provider_impl(ctx):
 
     file_to_subpath = {}
 
+    executable_name = "terraform-provider-{0}".format(ctx.attr.type)
+
     f = ctx.file.binary
-    subpath = "plugins/{}_{}/".format(os,arch) + f.basename
+    subpath = "plugins/{0}_{1}/{2}".format(os,arch, executable_name)
     out_legacy = ctx.actions.declare_file(subpath)
     file_to_subpath[out_legacy.path] = subpath
     ctx.actions.run_shell(
@@ -44,7 +46,7 @@ def terraform_provider_impl(ctx):
         inputs=depset([f]),
         env={
             "INPUT_FILE": f.path,
-            "INTERMEDIATE_FILE": f.basename,
+            "INTERMEDIATE_FILE": executable_name,
             "OUTPUT_FILE": out_modern.path
         },
         command="cp $INPUT_FILE $INTERMEDIATE_FILE && zip $OUTPUT_FILE $INTERMEDIATE_FILE"

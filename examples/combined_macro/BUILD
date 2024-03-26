@@ -3,8 +3,8 @@ load("@tf_modules//:def.bzl", "terraform_module")
 terraform_module(
     name = "provider",
     srcs = glob(["*.tf"]),
-    provider_binaries = ["//examples/provider/example_provider:terraform-provider-example"],
+    provider_binaries = ["//examples/provider/example_provider:example_provider"],
     provider_versions = {
-        "//examples/provider/example_provider:terraform-provider-example": "terraform.example.com/examplecorp/example/1.0.0",
+        "//examples/provider/example_provider:example_provider": "terraform.example.com/examplecorp/example/1.0.0",
     },
 )
