@@ -76,6 +76,17 @@ _terragrunt_register_toolchains = repository_rule(
 )
 
 def register_terragrunt_toolchain(version, default = False):
+    # Register repo for new naming convention (since these aren't technically toolchains)
+    if default:
+        _terragrunt_register_toolchains(
+            name = "terragrunt_default",
+            version = version,
+        )
+    _terragrunt_register_toolchains(
+        name = "terragrunt_" + version,
+        version = version,
+    )
+
     if default:
         _terragrunt_register_toolchains(
             name = "terragrunt_toolchain",

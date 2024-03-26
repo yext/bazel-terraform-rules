@@ -51,36 +51,33 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
 
-load("@tf_modules//toolchains/terraform:toolchain.bzl", "register_terraform_toolchain")
+load("@tf_modules//terraform:versions.bzl", "register_terraform_version")
 
-register_terraform_toolchain(
+register_terraform_version(
     "1.2.9",
     default = True,
 )
 
-register_terraform_toolchain("1.2.2")
+register_terraform_version("1.2.2")
 
-register_terraform_toolchain("0.12.24")
+register_terraform_version("0.12.24")
 
-register_terraform_toolchain("0.12.23")
+register_terraform_version("0.12.23")
 
-load("@tf_modules//toolchains/terragrunt:toolchain.bzl", "register_terragrunt_toolchain")
+load("@tf_modules//terragrunt:versions.bzl", "register_terragrunt_version")
 
-register_terragrunt_toolchain(
+register_terragrunt_version(
     "v0.45.2",
     default = True,
 )
 
-load("//:providers.bzl", "terraform_provider")
+load("@tf_modules//rules:provider.bzl", "remote_terraform_provider")
 
-terraform_provider(
+remote_terraform_provider(
     name = "provider_hashicorp_local",
     namespace = "hashicorp",
-    sha256_by_platform = {
-        "linux_amd64": "244b445bf34ddbd167731cc6c6b95bbed231dc4493f8cc34bd6850cfe1f78528",
-        "darwin_amd64": "3c330bdb626123228a0d1b1daa6c741b4d5d484ab1c7ae5d2f48d4c9885cc5e9",
-    },
     type = "local",
+    version = "2.4.1",
 
     # Details obtained from:
     # https://registry.terraform.io/v1/providers/hashicorp/local/2.4.1/download/linux/amd64
@@ -89,5 +86,8 @@ terraform_provider(
         "linux_amd64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_linux_amd64.zip",
         "darwin_amd64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_darwin_amd64.zip",
     },
-    version = "2.4.1",
+    sha256_by_platform = {
+        "linux_amd64": "244b445bf34ddbd167731cc6c6b95bbed231dc4493f8cc34bd6850cfe1f78528",
+        "darwin_amd64": "3c330bdb626123228a0d1b1daa6c741b4d5d484ab1c7ae5d2f48d4c9885cc5e9",
+    },
 )

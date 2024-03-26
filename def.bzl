@@ -13,7 +13,7 @@ def terraform_module(
         module_deps = [],
         provider_binaries=[], 
         provider_versions={},
-        terraform_executable = Label("@terraform_toolchain//:terraform_executable"),
+        terraform_executable = Label("@terraform_default//:terraform_executable"),
         absolute_module_source_paths = True,
         **kwargs):
     """Defines a new Terraform module.
@@ -96,13 +96,13 @@ terragrunt_working_directory = rule(
     attrs = {
         "module": attr.label(providers = [TerraformModuleInfo]),
         "terragrunt": attr.label(
-            default = Label("@terragrunt_toolchain//:terragrunt_executable"),
+            default = Label("@terragrunt_default//:terragrunt_executable"),
             allow_files = True,
             executable = True,
             cfg = "exec",
         ),
         "terraform": attr.label(
-            default = Label("@terraform_toolchain//:terraform_executable"),
+            default = Label("@terraform_default//:terraform_executable"),
             allow_files = True,
             executable = True,
             cfg = "exec",

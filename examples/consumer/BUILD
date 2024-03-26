@@ -16,5 +16,5 @@ terraform_module(
 terraform_working_directory(
     name = "terraform",
     module = ":consumer",
-    terraform = "@terraform_toolchain-0.12.24//:terraform_executable",
+    terraform = "@terraform_0.12.24//:terraform_executable",
 )

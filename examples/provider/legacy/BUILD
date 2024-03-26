@@ -8,7 +8,7 @@ terraform_working_directory(
         "//examples/provider/example_provider:provider_examplecorp_example",
         "@provider_hashicorp_local//:provider",
     ],
-    terraform = "@terraform_toolchain-0.12.24//:terraform_executable",
+    terraform = "@terraform_0.12.24//:terraform_executable",
 )
 
 terraform_module(

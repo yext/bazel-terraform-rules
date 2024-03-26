@@ -77,6 +77,17 @@ _terraform_register_toolchains = repository_rule(
 )
 
 def register_terraform_toolchain(version, default = False):
+    # Register repo for new naming convention (since these aren't technically toolchains)
+    if default:
+        _terraform_register_toolchains(
+            name = "terraform_default",
+            version = version,
+        )
+    _terraform_register_toolchains(
+        name = "terraform_" + version,
+        version = version,
+    )
+
     if default:
         _terraform_register_toolchains(
             name = "terraform_toolchain",

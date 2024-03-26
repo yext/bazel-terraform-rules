@@ -33,11 +33,11 @@ terraform_module(
 terraform_working_directory(
     name = "consumer_relative_terraform",
     module = ":consumer_relative",
-    terraform = "@terraform_toolchain-0.12.24//:terraform_executable",
+    terraform = "@terraform_0.12.24//:terraform_executable",
 )
 
 terraform_working_directory(
     name = "alternatepath_terraform",
     module = ":alternatepath",
-    terraform = "@terraform_toolchain-0.12.24//:terraform_executable",
+    terraform = "@terraform_0.12.24//:terraform_executable",
 )

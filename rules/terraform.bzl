@@ -167,7 +167,7 @@ terraform_working_directory = rule(
     attrs = {
         "module": attr.label(providers = [TerraformModuleInfo]),
         "terraform": attr.label(
-            default = Label("@terraform_toolchain//:terraform_executable"),
+            default = Label("@terraform_default//:terraform_executable"),
             allow_files = True,
             executable = True,
             cfg = "exec",
