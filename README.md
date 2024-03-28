@@ -39,7 +39,6 @@ load("@tf_modules//rules:module.bzl", "terraform_module")
 terraform_module(
     name = "mymodule",
     srcs = glob(["*.tf"]),
-    terraform_executable = "@terraform_1.2.0//:terraform_executable",
 )
 ```
 
@@ -63,6 +62,7 @@ load("@tf_modules//rules:terraform.bzl", "terraform_working_directory")
 terraform_working_directory(
     name = "terraform",
     module = ":mymodule",
+    terraform_executable = "@terraform_1.2.0//:terraform_executable",
 )
 ```
 
@@ -120,7 +120,7 @@ existing directory structure, but may result in your modules being less reusable
 
 ## Providers
 
-Terraform providers must be defined in your `WORKSPACE` to be provided to your `terraform_working_directory`
+Terraform providers should be defined in your `WORKSPACE` to be provided to your `terraform_working_directory`
 so they can load them during the build phase.
 
 You must provide a set of URLs and SHA256 sums by the platforms you want to support. These can be obtained by
@@ -161,6 +161,10 @@ terraform_working_directory(
     ],
 )
 ```
+
+To get up and running quickly, you can bypass this step by allowing providers to be downloaded during the build phase. Set
+`allow_provider_download = True`. This is not recommended, as it can result in different builds receiving different versions
+of providers.
 
 You can also define custom Terraform providers using the `terraform_provider` rule:
 
