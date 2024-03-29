@@ -64,13 +64,6 @@ register_terraform_version("0.12.24")
 
 register_terraform_version("0.12.23")
 
-load("@tf_modules//terragrunt:versions.bzl", "register_terragrunt_version")
-
-register_terragrunt_version(
-    "v0.45.2",
-    default = True,
-)
-
 load("@tf_modules//rules:provider.bzl", "remote_terraform_provider")
 
 remote_terraform_provider(

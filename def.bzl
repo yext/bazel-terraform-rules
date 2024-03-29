@@ -2,7 +2,6 @@ load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@tf_modules//rules:module.bzl", "TerraformModuleInfo", _terraform_module="terraform_module")
 load("@tf_modules//rules:provider.bzl", "terraform_provider")
 load("@tf_modules//rules:terraform.bzl", "terraform_working_directory")
-load("@tf_modules//rules:terragrunt.bzl", "terragrunt_working_directory_impl")
 
 def terraform_module(
         name,
@@ -95,25 +94,3 @@ def terraform_module(
     # an alias to Terraform without the module name prefix
     if name == paths.basename(native.package_name()):
         native.alias(name = "terraform", actual = ":{}_terraform".format(name))
-
-
-terragrunt_working_directory = rule(
-   implementation = terragrunt_working_directory_impl,
-   executable = True,
-    attrs = {
-        "module": attr.label(providers = [TerraformModuleInfo]),
-        "terragrunt": attr.label(
-            default = Label("@terragrunt_default//:terragrunt_executable"),
-            allow_files = True,
-            executable = True,
-            cfg = "exec",
-        ),
-        "terraform": attr.label(
-            default = Label("@terraform_default//:terraform_executable"),
-            allow_files = True,
-            executable = True,
-            cfg = "exec",
-        ),
-        "tf_vars": attr.string_dict(),
-    },
-)

@@ -1,7 +1,0 @@
-load("@tf_modules//rules:module.bzl", "terraform_module")
-
-terraform_module(
-    name = "source",
-    srcs = ["constant.tf"],
-    visibility = ["//visibility:public"],
-)
