@@ -97,3 +97,35 @@ def register_terraform_toolchain(version, default = False):
         name = "terraform_toolchain-" + version,
         version = version,
     )
+
+def _terraform_executable_impl(ctx):
+    # TODO: Add info for the version
+
+    f = ctx.file.binary
+    out_executable = ctx.actions.declare_file("terraform_executable")
+    ctx.actions.run_shell(
+        outputs=[out_executable],
+        inputs=depset([f]),
+        env = {
+            "INPUT_FILE": f.path,
+            "OUTPUT_FILE": out_executable.path,
+        },
+        command="cp $INPUT_FILE $OUTPUT_FILE"
+    )
+
+    return DefaultInfo(
+        executable = out_executable,
+    )
+
+terraform_executable = rule(
+    implementation = _terraform_executable_impl,
+    executable = True,
+    attrs = {
+        "binary": attr.label(
+            allow_single_file = True,
+            executable = True,
+            cfg = "exec",
+        ),
+        "version": attr.string(),
+    },
+)

@@ -32,14 +32,14 @@ def terraform_working_directory_impl(ctx):
     output = ctx.outputs.executable,
     is_executable = True,
     content = """
-BASE_DIR=$(pwd)
+BASE_PATH=$(pwd)
 {2}
 cd {0}
 {3}
-$BASE_DIR/{1} $@
+$BASE_PATH/{1} $@
 """.format(
     build_base_path + "/" + working_dir, 
-    ctx.executable.terraform.path, 
+    ctx.executable.terraform.short_path, 
     env_vars, 
     prep_command,
   ),
@@ -168,7 +168,7 @@ terraform_working_directory = rule(
         "module": attr.label(providers = [TerraformModuleInfo]),
         "terraform": attr.label(
             default = Label("@terraform_default//:terraform_executable"),
-            allow_files = True,
+            allow_single_file = True,
             executable = True,
             cfg = "exec",
         ),
