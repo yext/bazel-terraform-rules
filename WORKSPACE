@@ -60,6 +60,10 @@ register_terraform_version(
 
 register_terraform_version("1.2.2")
 
+register_terraform_version("0.14.11")
+
+register_terraform_version("0.13.7")
+
 register_terraform_version("0.12.24")
 
 register_terraform_version("0.12.23")

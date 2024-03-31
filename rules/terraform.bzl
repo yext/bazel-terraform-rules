@@ -1,9 +1,11 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
 load("@tf_modules//rules:provider.bzl", "TerraformProviderInfo")
+load("@tf_modules//toolchains/terraform:toolchain.bzl", "TerraformExecutableInfo")
 
 def terraform_working_directory_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
+  terraform_version = ctx.attr.terraform[TerraformExecutableInfo].version
   module_default = ctx.attr.module[DefaultInfo]
   all_outputs = []
   working_dir_prefix = ctx.label.name + "_working/"
@@ -152,8 +154,9 @@ disable_checkpoint = true
   )
   all_outputs.append(dot_terraform_tar)
 
-  # TODO The legacy cache is needed for Terraform 0.12
-  all_outputs += intermediates
+  # The legacy cache is needed for Terraform 0.13 and lower
+  if terraform_version < "0.14":
+    all_outputs += intermediates
 
   return DefaultInfo(
     executable = ctx.outputs.executable,
@@ -171,6 +174,7 @@ terraform_working_directory = rule(
             allow_single_file = True,
             executable = True,
             cfg = "exec",
+            providers = [TerraformExecutableInfo],
         ),
         "tf_vars": attr.string_dict(),
         "providers": attr.label_list(providers = [TerraformProviderInfo]),

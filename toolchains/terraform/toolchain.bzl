@@ -98,6 +98,11 @@ def register_terraform_toolchain(version, default = False):
         version = version,
     )
 
+TerraformExecutableInfo = provider(
+    doc = "Contains information about a version of Terraform's executable.",
+    fields = ["version"],
+)
+
 def _terraform_executable_impl(ctx):
     # TODO: Add info for the version
 
@@ -113,9 +118,14 @@ def _terraform_executable_impl(ctx):
         command="cp $INPUT_FILE $OUTPUT_FILE"
     )
 
-    return DefaultInfo(
-        executable = out_executable,
-    )
+    return [
+        DefaultInfo(
+            executable = out_executable,
+        ),
+        TerraformExecutableInfo(
+            version = ctx.attr.version,
+        ),
+    ]
 
 terraform_executable = rule(
     implementation = _terraform_executable_impl,
