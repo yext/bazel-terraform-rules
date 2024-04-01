@@ -18,49 +18,62 @@ This includes a line to register a specific Terraform version for use, of the fo
 
 ```
 # Register required Terraform versions
-register_terraform_toolchain("1.2.3", default=True)
+register_terraform_version("1.2.3", default=True)
 ```
 
-You can specify multiple versions of Terraform by calling `register_terraform_toolchain` multiple times.
+You can specify multiple versions of Terraform by calling `register_terraform_version` multiple times.
 
-Each call to `register_terraform_toolchain` will create a separate repo for that version, the binary for which can be referenced via
-the target: `@terraform_toolchain-{VERSION}//:terraform_executable`.
+Each call to `register_terraform_version` will create a separate repo for that version, the binary for which can be referenced via
+the target: `@terraform_{VERSION}//:terraform_executable`.
 
-If you set `default=True` for any call, there will also be a default target for that version: `@terraform_toolchain//:terraform_executable`.
+If you set `default=True` for any call, there will also be a default target for that version: `@terraform_default//:terraform_executable`.
 Note that you can only use `default=True` once.
 
 ## Declaring a module
 
-To use a Terraform module in Bazel, add a `BUILD` file to the same directory as the module with a `terraform_module` rule.
+To define a Terraform module in Bazel, add a `BUILD` file to the same directory as your `.tf` files with a `terraform_module` rule.
 
 ```
-load("@tf_modules//:def.bzl", "terraform_module")
+load("@tf_modules//rules:module.bzl", "terraform_module")
 
 terraform_module(
     name = "mymodule",
     srcs = glob(["*.tf"]),
-    terraform_executable = "@terraform_toolchain-1.2.0//:terraform_executable",
 )
 ```
 
-The above example will create a module called "mymodule", using Terraform version 1.2.0. The `srcs` attribute accepts any files to include
-in your module, retaining any directory structure relative to your module's BUILD file.
+The above example will create a module called "mymodule" that can be used as a dependency by any other modules.
+The `srcs` attribute accepts any files to include in your module, retaining any directory structure relative to your module's BUILD file.
 
 You may also include files from any other directories and flatten them into your module directory using `srcs_flatten`. This could be used,
 for example, to share a file between modules without making copies or symlinks.
 
+When you run `bazel build` against this target, it will assemble the Terraform files and any dependencies into a single package that you could
+run Terraform against in isolation.
+
 ## Running Terraform
 
-Each module defined with `terraform_module` will have an executable Terraform target that you can use to run arbitrary Terraform commands.
-
-This target will be `terraform`, prefixed with the name of your `terraform_module` and an underscore, so a
-module called `foo` in the `mymodule` package will have a target `:foo_terraform`.
-
-You can pass any commands and parameters to this target that you would to Terraform.
+To run Terraform against a module, you need to declare a working directory with the `terraform_working_directory` rule. This can be in the
+same package as your module or a totally different package!
 
 ```
-bazel run //path/to/mymodule:foo_terraform -- plan
-bazel run //path/to/mymodule:foo_terraform -- apply
+load("@tf_modules//rules:terraform.bzl", "terraform_working_directory")
+
+terraform_working_directory(
+    name = "terraform",
+    module = ":mymodule",
+    terraform_executable = "@terraform_1.2.0//:terraform_executable",
+)
+```
+
+When this target is built, it will assemble the module and run `terraform init` on it to generate a `.terraform` 
+directory.
+
+You can pass any Terraform commands and parameters to this target.
+
+```
+bazel run //path/to/package:terraform -- plan
+bazel run //path/to/package:terraform -- apply
 ```
 
 If your `terraform_module` also has the same name as your package directory, an alias to the Terraform target
@@ -81,13 +94,14 @@ terraform_module(
     name = "mymodule",
     srcs = glob(["*.tf"]),
     module_deps = [
-        "//modules/module_a",
-        "//modules/module_b",
+        "//examples/module_a",
+        "//examples/module_b",
     ],
 )
 ```
 
-This will create dependencies on `module_a` and `module_b`. These must be referenced in your `.tf` files using the full path from the root of your workspace:
+This will create dependencies on `module_a` and `module_b`. These must be referenced in your `.tf` files using
+the full path from the root of your workspace:
 
 ```
 module "a" {
@@ -101,28 +115,89 @@ module "b" {
 }
 ```
 
-You may also include other modules relative to yours within your `src` files. This allows you to preserve an existing directory structure, but may result
-in your modules being less reusable within your workspace.
+You may also include other modules relative to yours within your `src` files. This allows you to preserve an
+existing directory structure, but may result in your modules being less reusable within your workspace.
 
-## Custom Providers
+## Providers
 
-The `terraform_module` rule also allows you to build and use custom Terraform providers in the same repo.
+Terraform providers should be defined in your `WORKSPACE` to be provided to your `terraform_working_directory`
+so they can load them during the build phase.
+
+You must provide a set of URLs and SHA256 sums by the platforms you want to support. These can be obtained by
+navigating the [Terraform Provider Registry Protocol](https://developer.hashicorp.com/terraform/internals/provider-registry-protocol).
+An example is provided below for the [hashicorp/local](https://registry.terraform.io/providers/hashicorp/local/latest) provider.
 
 ```
-terraform_module(
-    name = "using_provider",
-    srcs = glob(["*.tf"]),
-    provider_binaries = [":terraform-provider-example"],
-    provider_versions = {
-        ":terraform-provider-example": "terraform.example.com/examplecorp/example/1.0.0",
+load("@tf_modules//rules:provider.bzl", "remote_terraform_provider")
+
+remote_terraform_provider(
+    name = "provider_hashicorp_local",
+    namespace = "hashicorp",
+    type = "local",
+    version = "2.4.1",
+
+    # Details obtained from:
+    # https://registry.terraform.io/v1/providers/hashicorp/local/2.4.1/download/linux/amd64
+    # https://registry.terraform.io/v1/providers/hashicorp/local/2.4.1/download/darwin/amd64
+    url_by_platform = {
+        "linux_amd64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_linux_amd64.zip",
+        "darwin_amd64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_darwin_amd64.zip",
+    },
+    sha256_by_platform = {
+        "linux_amd64": "244b445bf34ddbd167731cc6c6b95bbed231dc4493f8cc34bd6850cfe1f78528",
+        "darwin_amd64": "3c330bdb626123228a0d1b1daa6c741b4d5d484ab1c7ae5d2f48d4c9885cc5e9",
     },
 )
 ```
 
-The above adds a dependency on a provider with a binary available from the `:terraform-provider-example` target.
+Thes can be referenced in your `terraform_working_directory` by specifying the `provider` target in the repository created:
 
-The `provider_versions` map associates each binary with a full source and version for your provider, matching the `required_providers` stanza
-in your Terraform files. The above example would match with the below Terraform code:
+```
+terraform_working_directory(
+    name = "terraform",
+    module = ":module",
+    providers = [
+        "@provider_hashicorp_local//:provider",
+    ],
+)
+```
+
+To get up and running quickly, you can bypass this step by allowing providers to be downloaded during the build phase. Set
+`allow_provider_download = True`. This is not recommended, as it can result in different builds receiving different versions
+of providers.
+
+You can also define custom Terraform providers using the `terraform_provider` rule:
+
+```
+load("@tf_modules//rules:provider.bzl", "terraform_provider")
+
+terraform_provider(
+    name = "example_provider",
+    binary = ":provider_bin",
+    hostname = "terraform.example.com",
+    namespace = "examplecorp",
+    type = "example",
+    version = "1.0.0",
+)
+
+go_binary(
+    name = "provider_bin",
+    embed = [":provider_lib"],
+)
+
+terraform_working_directory(
+    name = "terraform",
+    module = ":module",
+    providers = [
+        ":example_provider",
+    ],
+)
+```
+
+This example creates a Go binary for a custom provider, and then defines a `terraform_provider` for it. This is then
+used by a `terraform_working_directory`.
+
+The above example would match with the below Terraform code:
 
 ```
 terraform {
@@ -135,4 +210,4 @@ terraform {
 }
 ```
 
-For Terraform versions below `0.13`, `provider_versions` and the `required_providers` stanza are not required.
+For Terraform versions below `0.13`, the `required_providers` stanza is not required.

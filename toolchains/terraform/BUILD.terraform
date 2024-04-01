@@ -1,0 +1,9 @@
+load("@tf_modules//toolchains/terraform:toolchain.bzl", "terraform_executable")
+
+package(default_visibility = ["//visibility:public"])
+
+terraform_executable(
+    name = "{name}",
+    binary = "terraform/terraform",
+    version = "{version}"
+)

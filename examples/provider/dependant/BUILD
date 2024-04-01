@@ -1,6 +1,9 @@
 load("@tf_modules//rules:module.bzl", "terraform_module")
 
 terraform_module(
-    name = "constants",
+    name = "dependant",
     srcs = glob(["*.tf"]),
+    module_deps = [
+        "//examples/provider",
+    ],
 )

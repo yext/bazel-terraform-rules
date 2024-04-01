@@ -5,7 +5,7 @@ TerraformModuleInfo = provider(
     fields = ["module_path", "build_base_path", "working_directory", "absolute_module_source_paths"],
 )
 
-def _impl(ctx):
+def terraform_module_impl(ctx):
     all_outputs = []
     build_base_path = paths.dirname(ctx.build_file_path)
 
@@ -62,36 +62,6 @@ def _impl(ctx):
                 arguments=[item.path, out.path],
                 command="cp $1 $2")
 
-    # Set the os name for the plugins dir 
-    os = ""
-    if ctx.target_platform_has_constraint(ctx.attr._darwin_constraint[platform_common.ConstraintValueInfo]):
-        os = "darwin"
-    if ctx.target_platform_has_constraint(ctx.attr._linux_constraint[platform_common.ConstraintValueInfo]):
-        os = "linux"
-
-    for provider in ctx.attr.provider_binaries:
-        for f in provider.files.to_list():
-            out = ctx.actions.declare_file("terraform.d/plugins/{}_amd64/".format(os) + f.basename)
-            all_outputs.append(out)
-            ctx.actions.run_shell(
-                outputs=[out],
-                inputs=depset([f]),
-                arguments=[f.path, out.path],
-                command="cp $1 $2")
-
-    for provider in ctx.attr.provider_binaries:
-        if not provider in ctx.attr.provider_versions.keys():
-            continue
-        providerVersion = ctx.attr.provider_versions[provider]
-        for f in provider.files.to_list():
-            out = ctx.actions.declare_file("terraform.d/plugins/{1}/{0}_amd64/".format(os,providerVersion) + f.basename)
-            all_outputs.append(out)
-            ctx.actions.run_shell(
-                outputs=[out],
-                inputs=depset([f]),
-                arguments=[f.path, out.path],
-                command="cp $1 $2")
-
     # Set the module source path for this module appropriately
     module_path = ctx.attr.module_path
     if module_path == "":
@@ -110,7 +80,7 @@ def _impl(ctx):
     ]
 
 terraform_module = rule(
-    implementation = _impl,
+    implementation = terraform_module_impl,
     attrs = {
         "module_path": attr.string(
             default = "",
@@ -132,9 +102,5 @@ terraform_module = rule(
             default = True,
             doc = "If True, the 'source' attribute of module blocks for dependencies will be the full path from the workspace root to the module's Bazel build file (prefixed with ./). If False, the 'source' attribute will be the relative paths of the respective .tf files."
         ),
-        "provider_binaries": attr.label_list(allow_files = True),
-        "provider_versions": attr.label_keyed_string_dict(allow_files = True),
-        '_darwin_constraint': attr.label(default = '@platforms//os:macos'),
-        '_linux_constraint': attr.label(default = '@platforms//os:linux'),
     },
 )

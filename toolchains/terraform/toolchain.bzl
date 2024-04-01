@@ -12,19 +12,6 @@ def get_dependencies(version):
             }
     return out
 
-def declare_terraform_toolchains(version, dependencies):
-    for key, info in dependencies.items():
-        name = "terraform_{}".format(key)
-        toolchain_name = "{}_toolchain".format(name)
-
-        native.toolchain(
-            name = toolchain_name,
-            exec_compatible_with = info["exec_compatible_with"],
-            target_compatible_with = info["target_compatible_with"],
-            toolchain = name,
-            toolchain_type = "@tf_modules//toolchains/terraform:toolchain_type",
-        )
-
 def _detect_platform_arch(ctx):
     if ctx.os.name == "linux":
         platform, arch = "linux", "amd64"
@@ -38,7 +25,7 @@ def _detect_platform_arch(ctx):
 def _terraform_build_file(ctx, version):
     ctx.template(
         "BUILD",
-        Label("@tf_modules//toolchains/terraform:BUILD.toolchain"),
+        Label("@tf_modules//toolchains/terraform:BUILD.terraform"),
         executable = False,
         substitutions = {
             "{name}": "terraform_executable",
@@ -90,6 +77,17 @@ _terraform_register_toolchains = repository_rule(
 )
 
 def register_terraform_toolchain(version, default = False):
+    # Register repo for new naming convention (since these aren't technically toolchains)
+    if default:
+        _terraform_register_toolchains(
+            name = "terraform_default",
+            version = version,
+        )
+    _terraform_register_toolchains(
+        name = "terraform_" + version,
+        version = version,
+    )
+
     if default:
         _terraform_register_toolchains(
             name = "terraform_toolchain",
@@ -99,3 +97,45 @@ def register_terraform_toolchain(version, default = False):
         name = "terraform_toolchain-" + version,
         version = version,
     )
+
+TerraformExecutableInfo = provider(
+    doc = "Contains information about a version of Terraform's executable.",
+    fields = ["version"],
+)
+
+def _terraform_executable_impl(ctx):
+    # TODO: Add info for the version
+
+    f = ctx.file.binary
+    out_executable = ctx.actions.declare_file("terraform_executable")
+    ctx.actions.run_shell(
+        outputs=[out_executable],
+        inputs=depset([f]),
+        env = {
+            "INPUT_FILE": f.path,
+            "OUTPUT_FILE": out_executable.path,
+        },
+        command="cp $INPUT_FILE $OUTPUT_FILE"
+    )
+
+    return [
+        DefaultInfo(
+            executable = out_executable,
+        ),
+        TerraformExecutableInfo(
+            version = ctx.attr.version,
+        ),
+    ]
+
+terraform_executable = rule(
+    implementation = _terraform_executable_impl,
+    executable = True,
+    attrs = {
+        "binary": attr.label(
+            allow_single_file = True,
+            executable = True,
+            cfg = "exec",
+        ),
+        "version": attr.string(),
+    },
+)
