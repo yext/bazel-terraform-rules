@@ -62,7 +62,7 @@ load("@tf_modules//rules:terraform.bzl", "terraform_working_directory")
 terraform_working_directory(
     name = "terraform",
     module = ":mymodule",
-    terraform_executable = "@terraform_1.2.0//:terraform_executable",
+    terraform = "@terraform_1.2.0//:terraform_executable",
 )
 ```
 
