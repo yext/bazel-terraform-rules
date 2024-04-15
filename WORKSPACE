@@ -54,7 +54,7 @@ protobuf_deps()
 load("@tf_modules//terraform:versions.bzl", "register_terraform_version")
 
 register_terraform_version(
-    "1.2.9",
+    "1.7.5",
     default = True,
 )
 
