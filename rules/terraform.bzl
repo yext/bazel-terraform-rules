@@ -121,7 +121,8 @@ disable_checkpoint = true
       TF=$(pwd)/$TF_RELATIVE
       cd $WORKING_DIR
 
-      mkdir .terraform
+      mkdir -p .terraform
+      mkdir -p terraform.d/plugins
       touch $TF_LOCK # ensure the lock file exists (older Terraform versions don't create it)
 
       $TF init -backend=false
