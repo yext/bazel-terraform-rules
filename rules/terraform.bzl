@@ -3,6 +3,11 @@ load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
 load("@tf_modules//rules:provider.bzl", "TerraformProviderInfo")
 load("@tf_modules//toolchains/terraform:toolchain.bzl", "TerraformExecutableInfo")
 
+TerraformWorkingDirInfo = provider(
+    doc = "Contains information about a Terraform working directory",
+    fields = ["module_working_directory", "terraform_version", "terraform_binary_path"],
+)
+
 def terraform_working_directory_impl(ctx):
   module = ctx.attr.module[TerraformModuleInfo]
   terraform_version = ctx.attr.terraform[TerraformExecutableInfo].version
@@ -29,6 +34,10 @@ def terraform_working_directory_impl(ctx):
 
   prep_command = "tar -xvzf .terraform.tar.gz > /dev/null"
 
+  reconfigure_cmd = ""
+  if ctx.attr.reconfigure:
+    reconfigure_cmd = "$BASE_PATH/{} init -input=false -reconfigure".format(ctx.executable.terraform.short_path)
+
   # Create the script that runs Terraform
   ctx.actions.write(
     output = ctx.outputs.executable,
@@ -38,12 +47,14 @@ BASE_PATH=$(pwd)
 {2}
 cd {0}
 {3}
+{4}
 $BASE_PATH/{1} $@
 """.format(
     build_base_path + "/" + working_dir, 
     ctx.executable.terraform.short_path, 
     env_vars, 
     prep_command,
+    reconfigure_cmd,
   ),
 )
 
@@ -159,11 +170,18 @@ disable_checkpoint = true
   if terraform_version < "0.14":
     all_outputs += intermediates
 
-  return DefaultInfo(
-    executable = ctx.outputs.executable,
-    files = depset(all_outputs),
-    runfiles = ctx.runfiles(all_outputs + [ctx.executable.terraform])
-  )
+  return [
+    DefaultInfo(
+      executable = ctx.outputs.executable,
+      files = depset(all_outputs),
+      runfiles = ctx.runfiles(all_outputs + [ctx.executable.terraform])
+    ),
+    TerraformWorkingDirInfo(
+      module_working_directory = dot_terraform_tar.dirname,
+      terraform_version = terraform_version,
+      terraform_binary_path = ctx.executable.terraform.path,
+    )
+  ]
 
 terraform_working_directory = rule(
    implementation = terraform_working_directory_impl,
@@ -180,5 +198,6 @@ terraform_working_directory = rule(
         "tf_vars": attr.string_dict(),
         "providers": attr.label_list(providers = [TerraformProviderInfo]),
         "allow_provider_download": attr.bool(default=False),
+        "reconfigure": attr.bool(default=False, doc="Run `terraform init -reconfigure` before each operation to accept changes in backend configuration."),
     },
 )
