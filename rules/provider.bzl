@@ -97,6 +97,8 @@ def _impl(ctx):
         os = "darwin"
         if arch == "x86_64":
             arch = "amd64"
+        if arch == "aarch64":
+            arch = "arm64"
 
     platform = "{}_{}".format(os, arch)
 
