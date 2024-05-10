@@ -79,12 +79,15 @@ remote_terraform_provider(
     # Details obtained from:
     # https://registry.terraform.io/v1/providers/hashicorp/local/2.4.1/download/linux/amd64
     # https://registry.terraform.io/v1/providers/hashicorp/local/2.4.1/download/darwin/amd64
+    # https://registry.terraform.io/v1/providers/hashicorp/local/2.4.1/download/darwin/arm64
     url_by_platform = {
         "linux_amd64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_linux_amd64.zip",
         "darwin_amd64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_darwin_amd64.zip",
+        "darwin_arm64": "https://releases.hashicorp.com/terraform-provider-local/2.4.1/terraform-provider-local_2.4.1_darwin_arm64.zip",
     },
     sha256_by_platform = {
         "linux_amd64": "244b445bf34ddbd167731cc6c6b95bbed231dc4493f8cc34bd6850cfe1f78528",
         "darwin_amd64": "3c330bdb626123228a0d1b1daa6c741b4d5d484ab1c7ae5d2f48d4c9885cc5e9",
+        "darwin_arm64": "75029676993accd6bef933c196b2fad51a9ec8a69a847dbbe96ec8ebf7926cdc",
     },
 )
