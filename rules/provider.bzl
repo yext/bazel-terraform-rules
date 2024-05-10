@@ -83,6 +83,7 @@ terraform_provider = rule(
             default = {
                 '@platforms//cpu:x86_64': "amd64",
                 '@platforms//cpu:arm64': "arm64",
+                "@platforms//cpu:aarch64", "arm64"
             }
         )
     },
