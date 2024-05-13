@@ -5,6 +5,9 @@ terraform_module(
     name = "provider",
     srcs = ["main.tf"],
     visibility = ["//visibility:public"],
+    module_deps = [
+        "//tests/backend_init/submodule",
+    ],
 )
 
 terraform_working_directory(

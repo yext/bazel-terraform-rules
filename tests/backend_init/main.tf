@@ -7,7 +7,12 @@ terraform {
   }
 }
 
+module "submodule" {
+  source = "./tests/backend_init/submodule"
+}
+
 resource "local_file" "foo" {
-  content  = "foo!"
+  content  = module.submodule.file_content
   filename = "${path.module}/foo.bar"
 }
+

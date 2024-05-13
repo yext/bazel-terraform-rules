@@ -38,6 +38,11 @@ function expect_output() {
 expect_output "+ resource \"local_file\" \"foo\" {"
 expect_output "1 to add"
 
+if [[ $(cat $MODULE_DIR/foo.bar) != "hello, world" ]]; then
+    echo "FAIL: content of generated file was not as expected"
+    PASS=0
+fi
+
 if [[ $PASS == 0 ]]; then
     echo "$OUT"
     exit 1
