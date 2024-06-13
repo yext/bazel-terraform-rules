@@ -5,7 +5,7 @@ load("@tf_modules//toolchains/terraform:toolchain.bzl", "TerraformExecutableInfo
 
 TerraformWorkingDirInfo = provider(
     doc = "Contains information about a Terraform working directory",
-    fields = ["module_working_directory", "terraform_version", "terraform_binary_path"],
+    fields = ["module_path", "terraform_version", "terraform_binary_path"],
 )
 
 def terraform_working_directory_impl(ctx):
@@ -14,7 +14,7 @@ def terraform_working_directory_impl(ctx):
   module_default = ctx.attr.module[DefaultInfo]
   all_outputs = []
   working_dir_prefix = ctx.label.name + "_working/"
-  working_dir = working_dir_prefix + module.working_directory + "/"
+  working_dir = working_dir_prefix + module.working_directory
   build_base_path = paths.dirname(ctx.build_file_path)
 
   for f in module_default.files.to_list():
@@ -50,7 +50,7 @@ cd {0}
 {4}
 $BASE_PATH/{1} $@
 """.format(
-    build_base_path + "/" + working_dir, 
+    build_base_path + "/" + working_dir + "/", 
     ctx.executable.terraform.short_path, 
     env_vars, 
     prep_command,
@@ -91,7 +91,7 @@ provider_installation {
   intermediates = []
 
   # Create the terraformrc file
-  initrc = ctx.actions.declare_file(working_dir + "init.tfrc")
+  initrc = ctx.actions.declare_file(working_dir + "/init.tfrc")
   intermediates.append(initrc)
   ctx.actions.write(
     output = initrc,
@@ -106,7 +106,7 @@ disable_checkpoint = true
       provider_info = provider[TerraformProviderInfo]
       for f in provider.files.to_list():
           f_out = provider_info.file_to_subpath[f.path]
-          out = ctx.actions.declare_file(working_dir + "terraform.d/{0}".format(f_out))
+          out = ctx.actions.declare_file(working_dir + "/terraform.d/{0}".format(f_out))
           intermediates.append(out)
 
           ctx.actions.run_shell(
@@ -116,9 +116,9 @@ disable_checkpoint = true
               command="cp $1 $2"
           )
 
-  tf_lock = ctx.actions.declare_file(working_dir + ".terraform.lock.hcl")
-  dot_terraform = ctx.actions.declare_directory(working_dir + ".terraform")
-  dot_terraform_tar = ctx.actions.declare_file(working_dir + ".terraform.tar.gz")
+  tf_lock = ctx.actions.declare_file(working_dir + "/.terraform.lock.hcl")
+  dot_terraform = ctx.actions.declare_directory(working_dir + "/.terraform")
+  dot_terraform_tar = ctx.actions.declare_file(working_dir + "/.terraform.tar.gz")
   ctx.actions.run_shell(
     outputs=[tf_lock, dot_terraform],
     inputs=all_outputs + intermediates + [ctx.executable.terraform],
@@ -177,7 +177,7 @@ disable_checkpoint = true
       runfiles = ctx.runfiles(all_outputs + [ctx.executable.terraform])
     ),
     TerraformWorkingDirInfo(
-      module_working_directory = dot_terraform_tar.dirname,
+      module_path = working_dir,
       terraform_version = terraform_version,
       terraform_binary_path = ctx.executable.terraform.path,
     )
