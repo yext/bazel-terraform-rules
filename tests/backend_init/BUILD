@@ -14,7 +14,7 @@ terraform_working_directory(
     name = "terraform",
     module = ":provider",
     allow_provider_download = True,
-    reconfigure = True,
+    init_on_build = False,
 )
 
 sh_test(

@@ -9,6 +9,12 @@ TerraformWorkingDirInfo = provider(
 )
 
 def terraform_working_directory_impl(ctx):
+  init_on_build = ctx.attr.init_on_build
+  allow_provider_download = ctx.attr.allow_provider_download
+  if not init_on_build and not allow_provider_download:
+    allow_provider_download = True
+    print("init_on_build=True, so defaulting allow_provider_download=True")
+
   module = ctx.attr.module[TerraformModuleInfo]
   terraform_version = ctx.attr.terraform[TerraformExecutableInfo].version
   module_default = ctx.attr.module[DefaultInfo]
@@ -31,12 +37,13 @@ def terraform_working_directory_impl(ctx):
   env_vars = ""
   for key in ctx.attr.tf_vars:
     env_vars = "{0}\nexport TF_VAR_{1}={2}".format(env_vars,key,ctx.attr.tf_vars[key])
+  
+  prep_cmd = ""
+  if not init_on_build:
+    prep_cmd = "$BASE_PATH/{} init -input=false".format(ctx.executable.terraform.short_path)
+  else:
+    prep_cmd = "tar -xvzf .terraform.tar.gz > /dev/null"
 
-  prep_command = "tar -xvzf .terraform.tar.gz > /dev/null"
-
-  reconfigure_cmd = ""
-  if ctx.attr.reconfigure:
-    reconfigure_cmd = "$BASE_PATH/{} init -input=false -reconfigure".format(ctx.executable.terraform.short_path)
 
   # Create the script that runs Terraform
   ctx.actions.write(
@@ -44,17 +51,15 @@ def terraform_working_directory_impl(ctx):
     is_executable = True,
     content = """
 BASE_PATH=$(pwd)
-{2}
-cd {0}
-{3}
-{4}
-$BASE_PATH/{1} $@
+{env_vars}
+cd {working_dir}
+{prep_cmd}
+$BASE_PATH/{terraform} $@
 """.format(
-    build_base_path + "/" + working_dir + "/", 
-    ctx.executable.terraform.short_path, 
-    env_vars, 
-    prep_command,
-    reconfigure_cmd,
+    working_dir=build_base_path + "/" + working_dir + "/", 
+    terraform=ctx.executable.terraform.short_path, 
+    env_vars=env_vars, 
+    prep_cmd=prep_cmd,
   ),
 )
 
@@ -116,58 +121,60 @@ disable_checkpoint = true
               command="cp $1 $2"
           )
 
-  tf_lock = ctx.actions.declare_file(working_dir + "/.terraform.lock.hcl")
-  dot_terraform = ctx.actions.declare_directory(working_dir + "/.terraform")
-  dot_terraform_tar = ctx.actions.declare_file(working_dir + "/.terraform.tar.gz")
-  ctx.actions.run_shell(
-    outputs=[tf_lock, dot_terraform],
-    inputs=all_outputs + intermediates + [ctx.executable.terraform],
-    env = {
-      "TF_RELATIVE": ctx.executable.terraform.path,
-      "WORKING_DIR": dot_terraform_tar.dirname,
-      "TF_CLI_CONFIG_FILE": initrc.basename,
-      "TF_LOCK": tf_lock.basename,
-    },
-    command="""
-      TF=$(pwd)/$TF_RELATIVE
-      cd $WORKING_DIR
+  if init_on_build:
+    tf_lock = ctx.actions.declare_file(working_dir + "/.terraform.lock.hcl")
+    dot_terraform = ctx.actions.declare_directory(working_dir + "/.terraform")
+    dot_terraform_tar = ctx.actions.declare_file(working_dir + "/.terraform.tar.gz")
+    ctx.actions.run_shell(
+      outputs=[tf_lock, dot_terraform],
+      inputs=all_outputs + intermediates + [ctx.executable.terraform],
+      env = {
+        "TF_RELATIVE": ctx.executable.terraform.path,
+        "WORKING_DIR": dot_terraform_tar.dirname,
+        "TF_CLI_CONFIG_FILE": initrc.basename,
+        "TF_LOCK": tf_lock.basename,
+      },
+      command="""
+        TF=$(pwd)/$TF_RELATIVE
+        cd $WORKING_DIR
 
-      mkdir -p .terraform
-      mkdir -p terraform.d/plugins
-      touch $TF_LOCK # ensure the lock file exists (older Terraform versions don't create it)
+        mkdir -p .terraform
+        mkdir -p terraform.d/plugins
+        touch $TF_LOCK # ensure the lock file exists (older Terraform versions don't create it)
 
-      $TF init -backend=false
-      if [ $? -ne 0 ]; then
-        exit 1
-      fi
-      $TF validate
-      if [ $? -ne 0 ]; then
-        exit 1
-      fi
-    """,
-  )
-  all_outputs.append(tf_lock)
+        $TF init -backend=false
+        if [ $? -ne 0 ]; then
+          exit 1
+        fi
+        $TF validate
+        if [ $? -ne 0 ]; then
+          exit 1
+        fi
+      """,
+    )
+    all_outputs.append(tf_lock)
 
-  ctx.actions.run_shell(
-    progress_message="Compressing .terraform directory",
-    outputs=[dot_terraform_tar],
-    inputs=[dot_terraform],
-    env = {
-      "WORKING_DIR": dot_terraform_tar.dirname,
-      "DOT_TERRAFORM_TAR": dot_terraform_tar.basename,
-    },
-    command="""
-      cd $WORKING_DIR
-      tar hczf $DOT_TERRAFORM_TAR .terraform
-      if [ $? -ne 0 ]; then
-        exit 1
-      fi
-    """,
-  )
-  all_outputs.append(dot_terraform_tar)
+    ctx.actions.run_shell(
+      progress_message="Compressing .terraform directory",
+      outputs=[dot_terraform_tar],
+      inputs=[dot_terraform],
+      env = {
+        "WORKING_DIR": dot_terraform_tar.dirname,
+        "DOT_TERRAFORM_TAR": dot_terraform_tar.basename,
+      },
+      command="""
+        cd $WORKING_DIR
+        tar hczf $DOT_TERRAFORM_TAR .terraform
+        if [ $? -ne 0 ]; then
+          exit 1
+        fi
+      """,
+    )
+    all_outputs.append(dot_terraform_tar)
 
   # The legacy cache is needed for Terraform 0.13 and lower
-  if terraform_version < "0.14":
+  # Or if we're going to initialized our providers on execution
+  if terraform_version < "0.14" or not ctx.attr.init_on_build:
     all_outputs += intermediates
 
   return [
@@ -199,6 +206,6 @@ terraform_working_directory = rule(
         "tf_vars": attr.string_dict(),
         "providers": attr.label_list(providers = [TerraformProviderInfo]),
         "allow_provider_download": attr.bool(default=False),
-        "reconfigure": attr.bool(default=False, doc="Run `terraform init -reconfigure` before each operation to accept changes in backend configuration."),
+        "init_on_build": attr.bool(default=True),
     },
 )

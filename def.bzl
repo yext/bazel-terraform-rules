@@ -1,5 +1,5 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@tf_modules//rules:module.bzl", "TerraformModuleInfo", _terraform_module="terraform_module")
+load("@tf_modules//rules:module.bzl", _terraform_module="terraform_module")
 load("@tf_modules//rules:provider.bzl", "terraform_provider")
 load("@tf_modules//rules:terraform.bzl", "terraform_working_directory")
 
@@ -88,6 +88,7 @@ def terraform_module(
         tf_vars = tf_vars,
         providers = providers,
         allow_provider_download = True,
+        init_on_build = False,
     )
 
     # If your module name shares the name of the package directory, create
