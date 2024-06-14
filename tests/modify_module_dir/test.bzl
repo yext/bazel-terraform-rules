@@ -10,7 +10,7 @@ def _execute_test_impl(ctx):
         content = """
 #!/bin/bash
 
-MODULE_DIR="./$(dirname {terraform_binary})/{module_path}"
+MODULE_DIR="./{module_path}"
 
 echo "hello, world" > $MODULE_DIR/content.txt
 
@@ -34,7 +34,7 @@ if [[ $PASS == 0 ]]; then
 fi
         """.format(
             terraform_binary=working_dir.files_to_run.executable.short_path,
-            module_path=working_dir_info.module_path,
+            module_path=working_dir_info.working_dir_short_path,
         ),
         is_executable = True,
     )

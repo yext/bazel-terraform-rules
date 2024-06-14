@@ -5,7 +5,7 @@ load("@tf_modules//toolchains/terraform:toolchain.bzl", "TerraformExecutableInfo
 
 TerraformWorkingDirInfo = provider(
     doc = "Contains information about a Terraform working directory",
-    fields = ["module_path", "terraform_version", "terraform_binary_path"],
+    fields = ["module", "working_dir_short_path", "terraform_version", "terraform_binary_path"],
 )
 
 def terraform_working_directory_impl(ctx):
@@ -177,7 +177,8 @@ disable_checkpoint = true
       runfiles = ctx.runfiles(all_outputs + [ctx.executable.terraform])
     ),
     TerraformWorkingDirInfo(
-      module_path = working_dir,
+      module = module,
+      working_dir_short_path = paths.dirname(initrc.short_path),
       terraform_version = terraform_version,
       terraform_binary_path = ctx.executable.terraform.path,
     )
