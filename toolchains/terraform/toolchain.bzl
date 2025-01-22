@@ -15,8 +15,10 @@ def get_dependencies(version):
 def _detect_platform_arch(ctx):
     if ctx.os.name == "linux":
         platform, arch = "linux", "amd64"
-    elif ctx.os.name == "mac os x":
+    elif ctx.os.name == "mac os x" and ctx.os.arch == "amd64":
         platform, arch = "darwin", "amd64"
+    elif ctx.os.name == "mac os x" and ctx.os.arch == "aarch64":
+        platform, arch = "darwin", "arm64"
     else:
         fail("Unsupported operating system: " + ctx.os.name)
 
