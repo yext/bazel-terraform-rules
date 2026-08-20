@@ -16,10 +16,28 @@ terraform_working_directory(
     ],
 )
 
+terraform_working_directory(
+    name = "opentofu",
+    module = ":provider",
+    providers = [
+        "//tests/module_with_providers/example_provider",
+        "@provider_hashicorp_local//:provider",
+    ],
+    terraform = "@opentofu_default//:opentofu_executable",
+)
+
 sh_test(
     name = "terraform_test",
     size = "small",
     srcs = ["test.sh"],
+    args = ["./tests/module_with_providers/terraform"],
     data = [":terraform"],
 )
 
+sh_test(
+    name = "opentofu_test",
+    size = "small",
+    srcs = ["test.sh"],
+    args = ["./tests/module_with_providers/opentofu"],
+    data = [":opentofu"],
+)

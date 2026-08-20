@@ -10,7 +10,7 @@ def terraform_module(
         srcs = [],
         srcs_flatten = [],
         module_deps = [],
-        provider_binaries=[], 
+        provider_binaries=[],
         provider_versions={},
         terraform_executable = Label("@terraform_default//:terraform_executable"),
         absolute_module_source_paths = True,
@@ -20,9 +20,9 @@ def terraform_module(
     This macro combines the terraform_module and terraform_working_directory rules from @tf_modules//rules to define a combined, runnable Terraform module.
     For modules that will only be used as dependencies, it is recommende to use the terraform_module rule directly without using this macro.
 
-    For backwards compatibility, the terraform_working_directory target created will have allow_provider_download set to True. 
+    For backwards compatibility, the terraform_working_directory target created will have allow_provider_download set to True.
     This means that providers may be downloaded if not included in the WORKSPACE. This may result in non-hermetic builds.
-    
+
     Args:
       name: Module name. A target will be added with the suffix "_terraform" to run the Terraform binary.
       module_path: Path to the Terraform module directory relative to the module root. Defaults to empty.
@@ -32,7 +32,7 @@ def terraform_module(
       module_deps: List of labels for other Terraform modules that this module depends on.
       provider_binaries: List of labels for Terraform provider binaries.
       provider_versions: Map of provider names to version constraints strings. Versions must be of the form <hostname>/<namespace>/<type>/<version>
-      terraform_executable: Label of the Terraform executable target to use. Defaults to the workspace default version.
+      terraform_executable: Label of the Terraform/OpenTofu executable target to use. Defaults to the workspace default version.
       absolute_module_source_paths: If True, source paths for dependencies will be absolute within the workspace. Otherwise, dependencies will be added as relative subdirectories.
       **kwargs: Additional keyword arguments passed through to the terraform_module rule.
     """
@@ -61,7 +61,7 @@ def terraform_module(
         version_segments = v.split("/")
         if len(version_segments) != 4:
             fail("Invalid provider version format (expected <hostname>/<namespace>/<type>/<version>): {}".format(v))
-        
+
         target = ""
         segments = provider_binary.split(":")
         if len(segments) > 1:

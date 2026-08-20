@@ -1,7 +1,7 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@tf_modules//rules:module.bzl", "TerraformModuleInfo")
 load("@tf_modules//rules:provider.bzl", "TerraformProviderInfo")
-load("@tf_modules//toolchains/terraform:toolchain.bzl", "TerraformExecutableInfo")
+load("@tf_modules//toolchains/terraform:toolchain.bzl", "IaCExecutableInfo")
 
 TerraformWorkingDirInfo = provider(
     doc = "Contains information about a Terraform working directory",
@@ -16,7 +16,7 @@ def terraform_working_directory_impl(ctx):
     print("init_on_build=True, so defaulting allow_provider_download=True")
 
   module = ctx.attr.module[TerraformModuleInfo]
-  terraform_version = ctx.attr.terraform[TerraformExecutableInfo].version
+  terraform_version = ctx.attr.terraform[IaCExecutableInfo].version
   module_default = ctx.attr.module[DefaultInfo]
   all_outputs = []
   working_dir_prefix = ctx.label.name + "_working/"
@@ -201,7 +201,7 @@ terraform_working_directory = rule(
             allow_single_file = True,
             executable = True,
             cfg = "exec",
-            providers = [TerraformExecutableInfo],
+            providers = [IaCExecutableInfo],
         ),
         "tf_vars": attr.string_dict(),
         "providers": attr.label_list(providers = [TerraformProviderInfo]),

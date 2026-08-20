@@ -14,7 +14,19 @@ terraform_working_directory(
     allow_provider_download = True,
 )
 
+terraform_working_directory(
+    name = "opentofu",
+    module = ":provider",
+    allow_provider_download = True,
+    terraform = "@opentofu_default//:opentofu_executable",
+)
+
 execute_test(
     name = "terraform_test",
     terraform_working_directory = ":terraform",
+)
+
+execute_test(
+    name = "opentofu_test",
+    terraform_working_directory = ":opentofu",
 )

@@ -13,10 +13,25 @@ terraform_working_directory(
     allow_provider_download = True,
 )
 
+terraform_working_directory(
+    name = "opentofu",
+    module = ":provider",
+    allow_provider_download = True,
+    terraform = "@opentofu_default//:opentofu_executable",
+)
+
 sh_test(
     name = "terraform_test",
     size = "small",
     srcs = ["test.sh"],
+    args = ["./tests/allow_provider_download/terraform"],
     data = [":terraform"],
 )
 
+sh_test(
+    name = "opentofu_test",
+    size = "small",
+    srcs = ["test.sh"],
+    args = ["./tests/allow_provider_download/opentofu"],
+    data = [":opentofu"],
+)

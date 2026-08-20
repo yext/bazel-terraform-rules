@@ -13,5 +13,14 @@ sh_test(
     name = "terraform_test",
     size = "small",
     srcs = ["test.sh"],
+    args = ["./tests/combined_macro/provider_terraform"],
     data = [":provider_terraform"],
+)
+
+sh_test(
+    name = "opentofu_test",
+    size = "small",
+    srcs = ["test.sh"],
+    args = ["./tests/combined_macro/provider_opentofu"],
+    data = [":provider_opentofu"],
 )

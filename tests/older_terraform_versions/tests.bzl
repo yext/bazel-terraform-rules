@@ -20,3 +20,24 @@ def test_terraform_version(
         srcs = ["test.sh"],
         data = [":{}".format(name)],
     )
+
+def test_opentofu_version(
+    name,
+    terraform,
+):
+    terraform_working_directory(
+        name = name,
+        module = ":provider",
+        providers = [
+            "//tests/module_with_providers/example_provider",
+        ],
+        terraform = terraform,
+    )
+
+    native.sh_test(
+        name = "{}_test".format(name),
+        args = ["./tests/older_terraform_versions/{}".format(name)],
+        size = "small",
+        srcs = ["test.sh"],
+        data = [":{}".format(name)],
+    )

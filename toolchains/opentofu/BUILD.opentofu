@@ -1,0 +1,9 @@
+load("@tf_modules//toolchains/opentofu:toolchain.bzl", "opentofu_executable")
+
+package(default_visibility = ["//visibility:public"])
+
+opentofu_executable(
+    name = "{name}",
+    binary = "opentofu/tofu",
+    version = "{version}"
+)

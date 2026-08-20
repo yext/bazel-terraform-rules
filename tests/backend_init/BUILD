@@ -17,10 +17,29 @@ terraform_working_directory(
     init_on_build = False,
 )
 
+terraform_working_directory(
+    name = "opentofu",
+    module = ":provider",
+    allow_provider_download = True,
+    init_on_build = False,
+    terraform = "@opentofu_default//:opentofu_executable",
+)
+
 sh_test(
     name = "terraform_test",
     size = "small",
     srcs = ["test.sh"],
+    args = ["./tests/backend_init/terraform"],
     data = [":terraform"],
 )
 
+sh_test(
+    name = "opentofu_test",
+    size = "small",
+    srcs = ["test.sh"],
+    args = [
+        "./tests/backend_init/opentofu",
+        "./tests/backend_init/opentofu_working/tests/backend_init",
+    ],
+    data = [":opentofu"],
+)

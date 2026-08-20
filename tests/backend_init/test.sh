@@ -1,8 +1,8 @@
 #!/bin/bash
 
-STATE_DIR=$(mktemp -d)
-
+TERRAFORM_BIN=$1
 MODULE_DIR=./tests/backend_init/terraform_working/tests/backend_init
+STATE_DIR=$(mktemp -d)
 
 BACKEND_FILE="$MODULE_DIR/local_backend.tf"
 cat > "$BACKEND_FILE" <<-EOF
@@ -19,7 +19,7 @@ if [ -f $STATE_DIR/terraform.tfstate ]; then
     exit 1
 fi
 
-OUT=$(./tests/backend_init/terraform apply -auto-approve -no-color)
+OUT=$($TERRAFORM_BIN apply -auto-approve -no-color)
 if [ $? -ne 0 ];
 then
     echo 'Apply failed';

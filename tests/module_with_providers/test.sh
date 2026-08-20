@@ -1,6 +1,8 @@
 #!/bin/bash
 
-OUT=$(./tests/module_with_providers/terraform plan -no-color)
+TERRAFORM_BIN=$1
+
+OUT=$($TERRAFORM_BIN plan -no-color)
 if [ $? -ne 0 ];
 then
     echo 'Plan failed';

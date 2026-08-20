@@ -1,4 +1,5 @@
-load("@tf_modules//toolchains/terraform:versions.bzl", "VERSIONS")
+load("@tf_modules//toolchains/opentofu:versions.bzl", "VERSIONS")
+load("@tf_modules//toolchains/terraform:toolchain.bzl", "IaCExecutableInfo")
 
 def get_dependencies(version):
     out = {}
@@ -24,20 +25,18 @@ def _detect_platform_arch(ctx):
 
     return platform, arch
 
-def _terraform_build_file(ctx, version):
+def _opentofu_build_file(ctx, version):
     ctx.template(
         "BUILD",
-        Label("@tf_modules//toolchains/terraform:BUILD.terraform"),
+        Label("@tf_modules//toolchains/opentofu:BUILD.opentofu"),
         executable = False,
         substitutions = {
-            "{name}": "terraform_executable",
+            "{name}": "opentofu_executable",
             "{version}": version,
-            "{dependencies}": str(get_dependencies(version)),
         },
     )
 
-# Mapping compatibility of Terraform versions to Bazel platforms
-# Based on list at: https://releases.hashicorp.com/terraform/1.2.3/
+# Mapping compatibility of OpenTofu versions to Bazel platforms
 compatibility = {
     "darwin_amd64": [
         "@platforms//os:osx",
@@ -59,7 +58,7 @@ def _get_url(version, platform):
 def _impl(ctx):
     platform, arch = _detect_platform_arch(ctx)
     version = ctx.attr.version
-    _terraform_build_file(ctx, version)
+    _opentofu_build_file(ctx, version)
 
     host = "{}_{}".format(platform, arch)
     info = get_dependencies(version)[host]
@@ -68,61 +67,48 @@ def _impl(ctx):
         url = _get_url(version, info["platform"]),
         sha256 = info["sha"],
         type = "zip",
-        output = "terraform",
+        output = "opentofu",
     )
 
-_terraform_register_toolchains = repository_rule(
+_opentofu_register_toolchains = repository_rule(
     implementation = _impl,
     attrs = {
         "version": attr.string(),
     },
 )
 
-def register_terraform_toolchain(version, default = False):
-    # Register repo for new naming convention (since these aren't technically toolchains)
+def register_opentofu_toolchain(version, default = False):
     if default:
-        _terraform_register_toolchains(
-            name = "terraform_default",
+        _opentofu_register_toolchains(
+            name = "opentofu_default",
             version = version,
         )
-    _terraform_register_toolchains(
-        name = "terraform_" + version,
+    _opentofu_register_toolchains(
+        name = "opentofu_" + version,
         version = version,
     )
 
     if default:
-        _terraform_register_toolchains(
-            name = "terraform_toolchain",
+        _opentofu_register_toolchains(
+            name = "opentofu_toolchain",
             version = version,
         )
-    _terraform_register_toolchains(
-        name = "terraform_toolchain-" + version,
+    _opentofu_register_toolchains(
+        name = "opentofu_toolchain-" + version,
         version = version,
     )
 
-TerraformExecutableInfo = provider(
-    doc = "Contains information about a version of Terraform's executable.",
-    fields = ["version"],
-)
-
-IaCExecutableInfo = provider(
-    doc = "Contains information about a version of an IaC executable.",
-    fields = ["distribution", "version"],
-)
-
-def _terraform_executable_impl(ctx):
-    # TODO: Add info for the version
-
+def _opentofu_executable_impl(ctx):
     f = ctx.file.binary
-    out_executable = ctx.actions.declare_file("terraform_executable")
+    out_executable = ctx.actions.declare_file("opentofu_executable")
     ctx.actions.run_shell(
-        outputs=[out_executable],
-        inputs=depset([f]),
+        outputs = [out_executable],
+        inputs = depset([f]),
         env = {
             "INPUT_FILE": f.path,
             "OUTPUT_FILE": out_executable.path,
         },
-        command="cp $INPUT_FILE $OUTPUT_FILE"
+        command = "cp $INPUT_FILE $OUTPUT_FILE",
     )
 
     return [
@@ -130,16 +116,13 @@ def _terraform_executable_impl(ctx):
             executable = out_executable,
         ),
         IaCExecutableInfo(
-            distribution = "terraform",
-            version = ctx.attr.version,
-        ),
-        TerraformExecutableInfo(
+            distribution = "opentofu",
             version = ctx.attr.version,
         ),
     ]
 
-terraform_executable = rule(
-    implementation = _terraform_executable_impl,
+opentofu_executable = rule(
+    implementation = _opentofu_executable_impl,
     executable = True,
     attrs = {
         "binary": attr.label(

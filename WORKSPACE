@@ -52,6 +52,12 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
 
 load("@tf_modules//terraform:versions.bzl", "register_terraform_version")
+load("@tf_modules//opentofu:versions.bzl", "register_opentofu_version")
+
+register_opentofu_version(
+    "1.7.5",
+    default = True,
+)
 
 register_terraform_version(
     "1.7.5",
